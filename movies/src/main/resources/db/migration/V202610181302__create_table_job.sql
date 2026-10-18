@@ -10,7 +10,7 @@ CREATE TABLE job (
     seq INT NOT NULL DEFAULT 99,
     job_type_id BIGINT NOT NULL,
     created_at TIMESTAMP,
-    CONSTRAINT fk_j_job_type FOREIGN KEY (job_type_id) REFERENCES job_type(id),
+    CONSTRAINT fk_j_job_type FOREIGN KEY (job_type_id) REFERENCES job_type(id)
 );
 
 INSERT INTO job_type (job_group, job_name, created_at) VALUES
