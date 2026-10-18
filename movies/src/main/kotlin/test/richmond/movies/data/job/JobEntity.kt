@@ -30,6 +30,7 @@ class JobEntity (
     val jobType: JobTypeEntity,
 
     @CreationTimestamp
+    @Column(name = "created_at")
     val createdAt: Instant = Instant.now(),
 
     @OneToMany(mappedBy = "job", fetch = FetchType.LAZY)

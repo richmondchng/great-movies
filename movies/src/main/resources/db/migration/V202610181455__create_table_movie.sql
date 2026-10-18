@@ -3,6 +3,7 @@ CREATE TABLE movie (
     title VARCHAR(100) NOT NULL,
     summary VARCHAR(500),
     synopsis TEXT,
+    release_date DATE,
     created_at TIMESTAMP
 );
 

@@ -9,6 +9,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.time.Instant
+import java.time.LocalDate
 import org.hibernate.annotations.CreationTimestamp
 
 @Entity
@@ -28,7 +29,11 @@ class MovieEntity (
     @Column(nullable = true, name = "synopsis")
     val synopsis: String?,
 
+    @Column(nullable = false, name = "release_date")
+    val releaseDate: LocalDate,
+
     @CreationTimestamp
+    @Column(name = "created_at")
     val createdAt: Instant = Instant.now(),
 
     @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY)

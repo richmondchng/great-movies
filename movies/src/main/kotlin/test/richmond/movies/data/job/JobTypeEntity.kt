@@ -31,5 +31,6 @@ class JobTypeEntity(
     val jobName: String,
 
     @CreationTimestamp
+    @Column(name = "created_at")
     val createdAt: Instant = Instant.now()
 )

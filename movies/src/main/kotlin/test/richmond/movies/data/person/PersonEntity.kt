@@ -27,6 +27,7 @@ class PersonEntity (
     val lastName: String? = null,
 
     @CreationTimestamp
+    @Column(name = "created_at")
     val createdAt: Instant = Instant.now(),
 
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
