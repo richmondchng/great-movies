@@ -1,3 +1,5 @@
+BEGIN;
+
 INSERT INTO person(id, first_name, last_name, title, created_at) VALUES
 (1, 'Robert', 'Downey Jr.', 'Actor', CURRENT_TIMESTAMP),
 (2, 'Gwyneth', 'Paltrow', 'Actor', CURRENT_TIMESTAMP),
@@ -38,3 +40,25 @@ INSERT INTO job_crew(job_id, job_name) VALUES
 (5, 'Writer'),
 (6, 'Writer'),
 (7, 'Writer');
+
+COMMIT;
+
+DO $$
+BEGIN
+PERFORM setval(
+               pg_get_serial_sequence('movie', 'id'),
+               COALESCE((SELECT MAX(id) FROM movie), 1),
+               (SELECT COUNT(*) > 0 FROM movie)
+       );
+PERFORM setval(
+               pg_get_serial_sequence('person', 'id'),
+               COALESCE((SELECT MAX(id) FROM person), 1),
+               (SELECT COUNT(*) > 0 FROM person)
+       );
+PERFORM setval(
+               pg_get_serial_sequence('job', 'id'),
+               COALESCE((SELECT MAX(id) FROM job), 1),
+               (SELECT COUNT(*) > 0 FROM job)
+       );
+
+END $$;

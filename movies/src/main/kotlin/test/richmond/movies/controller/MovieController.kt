@@ -23,7 +23,7 @@ class MovieController(
     }
 
     @MutationMapping(name = "addMovie")
-    fun addMovie(@Argument movie: MovieInput) : MovieDTO? {
+    fun addMovie(@Argument movie: MovieInput) : MovieDTO {
         logger.info("Adding a new movie: ${movie.title}")
         return movieService.addMovie(movie)
     }

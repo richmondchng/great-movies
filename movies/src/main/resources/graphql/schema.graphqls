@@ -6,7 +6,7 @@ type Query {
 }
 
 type Mutation {
-    addMovie(movie: MovieInput): Movie
+    addMovie(movie: MovieInput!): Movie!
 }
 
 # object type
@@ -37,7 +37,6 @@ type Crew {
 }
 
 input MovieInput {
-    id: Int
     title: String!
     summary: String
     releaseYear: Int!

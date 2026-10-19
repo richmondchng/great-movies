@@ -17,6 +17,7 @@ import test.richmond.movies.data.entity.CrewJobEntity
 import test.richmond.movies.data.entity.MovieEntity
 import test.richmond.movies.data.entity.PersonEntity
 import test.richmond.movies.data.repository.MovieRepository
+import test.richmond.movies.model.dto.MovieInput
 
 @ExtendWith(MockitoExtension::class)
 class MovieServiceTest {
@@ -139,6 +140,33 @@ class MovieServiceTest {
         assertThat(cast3?.sequence).isEqualTo(13)
         assertThat(cast3?.jobId).isEqualTo(16L)
         assertThat(cast3?.characterName).isEqualTo("James Rhodes")
+    }
+
+    @Test
+    fun `should add movie if id is 0`() {
+        val movie = constructMovieEntity(
+            id = 2L,
+            title = "Movie A",
+            summary = "Movie A summary",
+            synopsis = "Movie A synopsis",
+            rating = BigDecimal.valueOf(4.09999),
+            releaseYear = 2020,
+        )
+        whenever(movieRepository.save(any<MovieEntity>())).thenReturn(movie)
+
+        val input = MovieInput(id = 0,
+            title = "Movie A",
+            summary = "Movie A summary",
+            rating = "4.0",
+            releaseYear = 2020)
+        val result = movieService.addMovie(input)
+
+        assertThat(result).isNotNull
+        assertThat(result.id).isEqualTo(2L)
+        assertThat(result.title).isEqualTo("Movie A")
+        assertThat(result.summary).isEqualTo("Movie A summary")
+        assertThat(result.rating).isEqualTo("4.0")
+        assertThat(result.releaseYear).isEqualTo(2020)
     }
 
     fun constructMovieEntity(id: Long,

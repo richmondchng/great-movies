@@ -1,5 +1,6 @@
 package test.richmond.movies.service
 
+import java.math.BigDecimal
 import java.math.RoundingMode
 import org.springframework.stereotype.Service
 import test.richmond.movies.data.entity.CastJobEntity
@@ -27,7 +28,8 @@ class MovieService(
     }
 
     fun addMovie(movie: MovieInput): MovieDTO {
-        throw NotImplementedError()
+        val result = movieRepository.save(mapToEntity(movie))
+        return mapToDTO(result)
     }
 
     private fun mapToDTO(movieEntity: MovieEntity): MovieDTO {
@@ -74,6 +76,17 @@ class MovieService(
             sequence = crewEntity.sequence,
             jobName = crewEntity.jobName,
             jobId = crewEntity.id
+        )
+    }
+
+    private fun mapToEntity(movieInput: MovieInput) : MovieEntity {
+        return MovieEntity(
+            id = 0L,
+            title = movieInput.title,
+            summary = movieInput.summary,
+            synopsis = movieInput.summary,
+            rating = BigDecimal(movieInput.rating),
+            releaseYear = movieInput.releaseYear
         )
     }
 }
