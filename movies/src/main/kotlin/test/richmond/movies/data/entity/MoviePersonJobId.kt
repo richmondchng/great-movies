@@ -1,4 +1,4 @@
-package test.richmond.movies.data.movie
+package test.richmond.movies.data.entity
 
 import jakarta.persistence.Column
 import java.io.Serializable

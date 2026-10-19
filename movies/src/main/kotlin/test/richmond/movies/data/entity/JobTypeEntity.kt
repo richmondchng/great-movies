@@ -1,4 +1,4 @@
-package test.richmond.movies.data.job
+package test.richmond.movies.data.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

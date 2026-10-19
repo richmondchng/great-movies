@@ -1,4 +1,4 @@
-package test.richmond.movies.data.movie
+package test.richmond.movies.data.entity
 
 import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
@@ -7,8 +7,6 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.MapsId
 import jakarta.persistence.Table
-import test.richmond.movies.data.job.JobEntity
-import test.richmond.movies.data.person.PersonEntity
 
 @Entity
 @Table(name = "movie_person_job")

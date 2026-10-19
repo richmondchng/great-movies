@@ -1,4 +1,4 @@
-package test.richmond.movies.data.movie
+package test.richmond.movies.data.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -9,33 +9,26 @@ import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.time.Instant
-import java.time.LocalDate
 import org.hibernate.annotations.CreationTimestamp
 
 @Entity
-@Table(name = "movie")
-class MovieEntity (
+@Table(name = "person")
+class PersonEntity (
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
 
-    @Column(nullable = false, name = "title")
-    val title: String,
+    @Column(nullable = false, name = "first_name")
+    val firstName: String = "",
 
-    @Column(nullable = true, name = "summary")
-    val summary: String?,
-
-    @Column(nullable = true, name = "synopsis")
-    val synopsis: String?,
-
-    @Column(nullable = false, name = "release_date")
-    val releaseDate: LocalDate,
+    @Column(nullable = true, name = "last_name")
+    val lastName: String? = null,
 
     @CreationTimestamp
     @Column(name = "created_at")
     val createdAt: Instant = Instant.now(),
 
-    @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY)
-    val peopleJobs: MutableSet<MoviePersonJob> = mutableSetOf()
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
+    val movieJobs: MutableSet<MoviePersonJob> = mutableSetOf()
 )
