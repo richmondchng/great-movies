@@ -10,7 +10,6 @@ type Movie {
     id: ID!
     title: String!
     summary: String
-    synopsis: String
     releaseYear: Int!
     rating: String!
     cast: [Cast!]!

@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Import
 import org.springframework.graphql.test.tester.GraphQlTester
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import test.richmond.movies.config.GraphQLConfig
+import test.richmond.movies.model.dto.CastDTO
+import test.richmond.movies.model.dto.CrewDTO
 import test.richmond.movies.model.dto.MovieDTO
 import test.richmond.movies.service.MovieService
 
@@ -24,17 +26,7 @@ class MovieControllerTest @Autowired constructor(
 
     @Test
     fun `should return movie for movie id`() {
-        whenever(movieService.findMovieById(any())).thenReturn(
-            MovieDTO(
-                1L,
-                "Test title",
-                "Test summary",
-                "Test synopsis",
-                "5.0",
-                2026,
-                Instant.now()
-            )
-        )
+        whenever(movieService.findMovieById(any())).thenReturn(constructMovieDTO())
 
         graphQlTester.document("""
             query {
@@ -42,9 +34,22 @@ class MovieControllerTest @Autowired constructor(
                     id
                     title
                     summary
-                    synopsis
                     releaseYear
                     rating
+                    cast {
+                        personId
+                        firstName
+                        lastName
+                        sequence
+                        characterName
+                    }
+                    crew {
+                        personId
+                        firstName
+                        lastName
+                        sequence
+                        jobName
+                    }
                 }
             }""".trimIndent()).execute()
             .path("movie")
@@ -53,25 +58,32 @@ class MovieControllerTest @Autowired constructor(
                     "id": "1",
                     "title": "Test title",
                     "summary": "Test summary",
-                    "synopsis": "Test synopsis",
                     "releaseYear": 2026,
-                    "rating": "5.0"
+                    "rating": "5.0",
+                    "cast": [
+                        {
+                            "personId": "1",
+                            "firstName": "Peter",
+                            "lastName": "Parker",
+                            "sequence": 1,
+                            "characterName": "Spiderman"
+                        }
+                    ],
+                    "crew": [
+                       {
+                            "personId": "2",
+                            "firstName": "Norman",
+                            "lastName": "Osborn",
+                            "sequence": 1,
+                            "jobName": "Director"
+                        }
+                    ]
                 }""".trimIndent())
     }
 
     @Test
     fun `should return movie title only for movie id`() {
-        whenever(movieService.findMovieById(any())).thenReturn(
-            MovieDTO(
-                1L,
-                "Test title",
-                "Test summary",
-                "Test synopsis",
-                "5.0",
-                2026,
-                Instant.now()
-            )
-        )
+        whenever(movieService.findMovieById(any())).thenReturn(constructMovieDTO())
 
         graphQlTester.document("""
             query {
@@ -84,5 +96,19 @@ class MovieControllerTest @Autowired constructor(
                 {
                     "title": "Test title"
                 }""".trimIndent())
+    }
+
+    private fun constructMovieDTO() : MovieDTO {
+        return MovieDTO(
+            1L,
+            "Test title",
+            "Test summary",
+            "Test synopsis",
+            "5.0",
+            2026,
+            Instant.now(),
+            cast = listOf(CastDTO(1L, "Peter", "Parker", 1, "Spiderman", 1L)),
+            crew = listOf(CrewDTO(2L, "Norman", "Osborn", 1, "Director", 2L))
+        )
     }
 }
