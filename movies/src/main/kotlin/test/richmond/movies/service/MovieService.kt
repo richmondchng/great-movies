@@ -2,7 +2,6 @@ package test.richmond.movies.service
 
 import java.time.Instant
 import java.time.LocalDate
-import java.util.Optional
 import org.springframework.stereotype.Service
 import test.richmond.movies.model.dto.MovieDTO
 

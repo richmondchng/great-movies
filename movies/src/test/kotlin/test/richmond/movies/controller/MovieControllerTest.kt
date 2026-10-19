@@ -31,9 +31,9 @@ class MovieControllerTest @Autowired constructor(
         whenever(movieService.findMovieById(any())).thenReturn(
             MovieDTO(
                 1L,
-                "Test",
-                "Test",
-                "Test",
+                "Test title",
+                "Test summary",
+                "Test synopsis",
                 LocalDate.of(2026, 10, 18),
                 Instant.now()
             )
@@ -57,6 +57,32 @@ class MovieControllerTest @Autowired constructor(
                     "summary": "Test",
                     "synopsis": "Test",
                     "releaseDate": "2026-10-18"
+                }""".trimIndent())
+    }
+
+    @Test
+    fun `should return movie title only for movie id`() {
+        whenever(movieService.findMovieById(any())).thenReturn(
+            MovieDTO(
+                1L,
+                "Test title",
+                "Test summary",
+                "Test synopsis",
+                LocalDate.of(2026, 10, 18),
+                Instant.now()
+            )
+        )
+
+        graphQlTester.document("""
+            query {
+                movie(id: 1) {
+                    title
+                }
+            }""".trimIndent()).execute()
+            .path("movie")
+            .matchesJson("""
+                {
+                    "title": "Test title"
                 }""".trimIndent())
     }
 }
