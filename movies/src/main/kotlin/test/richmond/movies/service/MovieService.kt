@@ -10,6 +10,7 @@ import test.richmond.movies.data.entity.MovieEntity
 import test.richmond.movies.model.dto.CastDTO
 import test.richmond.movies.model.dto.CrewDTO
 import test.richmond.movies.model.dto.MovieDTO
+import test.richmond.movies.model.dto.MovieInput
 import kotlin.Long
 
 @Service
@@ -25,7 +26,11 @@ class MovieService(
         return null
     }
 
-    fun mapToDTO(movieEntity: MovieEntity): MovieDTO {
+    fun addMovie(movie: MovieInput): MovieDTO {
+        throw NotImplementedError()
+    }
+
+    private fun mapToDTO(movieEntity: MovieEntity): MovieDTO {
         val crewList = mutableListOf<CrewDTO>()
         val castList = mutableListOf<CastDTO>()
 
@@ -50,7 +55,7 @@ class MovieService(
         )
     }
 
-    fun mapToDTO(castEntity: CastJobEntity): CastDTO {
+    private fun mapToDTO(castEntity: CastJobEntity): CastDTO {
         return CastDTO(
             personId = castEntity.person.id,
             firstName = castEntity.person.firstName,
@@ -61,7 +66,7 @@ class MovieService(
         )
     }
 
-    fun mapToDTO(crewEntity: CrewJobEntity): CrewDTO {
+    private fun mapToDTO(crewEntity: CrewJobEntity): CrewDTO {
         return CrewDTO(
             personId = crewEntity.person.id,
             firstName = crewEntity.person.firstName,

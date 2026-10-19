@@ -5,6 +5,10 @@ type Query {
     movie(id: Int!): Movie
 }
 
+type Mutation {
+    addMovie(movie: MovieInput): Movie
+}
+
 # object type
 type Movie {
     id: ID!
@@ -30,4 +34,12 @@ type Crew {
     lastName: String
     sequence: Int!
     jobName: String!
+}
+
+input MovieInput {
+    id: Int
+    title: String!
+    summary: String
+    releaseYear: Int!
+    rating: String!
 }

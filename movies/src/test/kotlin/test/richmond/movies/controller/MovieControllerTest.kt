@@ -98,14 +98,53 @@ class MovieControllerTest @Autowired constructor(
                 }""".trimIndent())
     }
 
-    private fun constructMovieDTO() : MovieDTO {
+    @Test
+    fun `should return movie after add`() {
+        whenever(movieService.addMovie(any())).thenReturn(constructMovieDTO(
+            id = 2L,
+            title = "Test title 2",
+            summary = "Test summary 2",
+            rating = "1.0",
+            releaseYear = 2026))
+
+        graphQlTester.document("""
+            mutation {
+                addMovie(movie: {
+                    title: "Test title 2"
+                    summary: "Test summary 2"
+                    rating: "1.0"
+                    releaseYear: 2026
+                }) {
+                    id
+                    title
+                    summary
+                    rating
+                    releaseYear
+                }
+            }""".trimIndent()).execute()
+            .path("addMovie")
+            .matchesJson("""
+                {
+                    "id": "2",
+                    "title": "Test title 2",
+                    "summary": "Test summary 2",
+                    "rating": "1.0",
+                    "releaseYear": 2026
+                }""".trimIndent())
+    }
+
+    private fun constructMovieDTO(id : Long = 1L,
+                                  title: String = "Test title",
+                                  summary: String = "Test summary",
+                                  rating: String = "5.0",
+                                  releaseYear: Int = 2026) : MovieDTO {
         return MovieDTO(
-            1L,
-            "Test title",
-            "Test summary",
-            "Test synopsis",
-            "5.0",
-            2026,
+            id = id,
+            title = title,
+            summary = summary,
+            synopsis = "Test synopsis",
+            rating = rating,
+            releaseYear = releaseYear,
             Instant.now(),
             cast = listOf(CastDTO(1L, "Peter", "Parker", 1, "Spiderman", 1L)),
             crew = listOf(CrewDTO(2L, "Norman", "Osborn", 1, "Director", 2L))
