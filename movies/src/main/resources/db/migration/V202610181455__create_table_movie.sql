@@ -3,16 +3,7 @@ CREATE TABLE movie (
     title VARCHAR(100) NOT NULL,
     summary VARCHAR(500),
     synopsis TEXT,
-    release_date DATE,
+    release_year INT,
+    rating DECIMAL,
     created_at TIMESTAMP
-);
-
-CREATE TABLE movie_person_job (
-    movie_id BIGINT NOT NULL,
-    person_id BIGINT NOT NULL,
-    job_id BIGINT NOT NULL,
-    CONSTRAINT pk_movie_person_job PRIMARY KEY (movie_id, person_id, job_id),
-    CONSTRAINT fk_mpj_movie FOREIGN KEY (movie_id) REFERENCES movie(id),
-    CONSTRAINT fk_mpj_person FOREIGN KEY (person_id) REFERENCES person(id),
-    CONSTRAINT fk_mpj_job FOREIGN KEY (job_id) REFERENCES job(id)
 );

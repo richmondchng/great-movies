@@ -1,4 +1,4 @@
-scalar Date
+#scalar Date
 
 # Query type
 type Query {
@@ -11,5 +11,24 @@ type Movie {
     title: String!
     summary: String
     synopsis: String
-    releaseDate: Date!
+    releaseYear: Int!
+    rating: String!
+    cast: [Cast!]!
+    crew: [Crew!]!
+}
+
+type Cast {
+    personId: ID!
+    firstName: String!
+    lastName: String
+    sequence: Int!
+    characterName: String!
+}
+
+type Crew {
+    personId: ID!
+    firstName: String!
+    lastName: String
+    sequence: Int!
+    jobName: String!
 }

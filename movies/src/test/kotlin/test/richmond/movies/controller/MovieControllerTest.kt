@@ -1,10 +1,6 @@
 package test.richmond.movies.controller
 
 import java.time.Instant
-import java.time.LocalDate
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
@@ -34,7 +30,8 @@ class MovieControllerTest @Autowired constructor(
                 "Test title",
                 "Test summary",
                 "Test synopsis",
-                LocalDate.of(2026, 10, 18),
+                "5.0",
+                2026,
                 Instant.now()
             )
         )
@@ -46,17 +43,19 @@ class MovieControllerTest @Autowired constructor(
                     title
                     summary
                     synopsis
-                    releaseDate
+                    releaseYear
+                    rating
                 }
             }""".trimIndent()).execute()
             .path("movie")
             .matchesJson("""
                 {
                     "id": "1",
-                    "title": "Test",
-                    "summary": "Test",
-                    "synopsis": "Test",
-                    "releaseDate": "2026-10-18"
+                    "title": "Test title",
+                    "summary": "Test summary",
+                    "synopsis": "Test synopsis",
+                    "releaseYear": 2026,
+                    "rating": "5.0"
                 }""".trimIndent())
     }
 
@@ -68,7 +67,8 @@ class MovieControllerTest @Autowired constructor(
                 "Test title",
                 "Test summary",
                 "Test synopsis",
-                LocalDate.of(2026, 10, 18),
+                "5.0",
+                2026,
                 Instant.now()
             )
         )

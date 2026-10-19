@@ -2,7 +2,6 @@ package test.richmond.movies.data.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -25,10 +24,13 @@ class PersonEntity (
     @Column(nullable = true, name = "last_name")
     val lastName: String? = null,
 
+    @Column(nullable = true, name = "title")
+    var title: String?,
+
     @CreationTimestamp
     @Column(name = "created_at")
     val createdAt: Instant = Instant.now(),
 
-    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
-    val movieJobs: MutableSet<MoviePersonJob> = mutableSetOf()
+    @OneToMany(mappedBy = "person")
+    val jobs: MutableList<JobEntity> = mutableListOf()
 )

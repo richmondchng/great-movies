@@ -1,14 +1,15 @@
 package test.richmond.movies.model.dto
 
 import java.time.Instant
-import java.time.LocalDate
-import lombok.Builder
 
 data class MovieDTO(
-    var id : Long,
-    var title : String,
-    var summary : String,
-    var synopsis : String,
-    var releaseDate : LocalDate,
-    var createdAt: Instant
+    val id: Long = 0L,
+    val title: String = "",
+    val summary: String? = "",
+    val synopsis: String? = "",
+    val rating: String = "0.0",
+    val releaseYear: Int = 0,
+    val createdAt: Instant = Instant.now(),
+    val cast: List<CastDTO> = listOf(),
+    val crew: List<CrewDTO> = listOf()
 )
