@@ -57,6 +57,24 @@ type Person {
     firstName: String!
     lastName: String
     title: String
+    workedOn: [WorkedOn!]!
+    actedIn: [ActedIn!]!
+}
+
+type WorkedOn {
+    jobId: Int!
+    jobName: String!
+    movieId: Int!
+    movieName: String!
+    releaseYear: Int!
+}
+
+type ActedIn {
+    jobId: Int!
+    characterName: String!
+    movieId: Int!
+    movieName: String!
+    releaseYear: Int!
 }
 
 input MovieInput {

@@ -14,6 +14,10 @@ import org.mockito.kotlin.whenever
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import test.richmond.movies.data.entity.CastJobEntity
+import test.richmond.movies.data.entity.CrewJobEntity
+import test.richmond.movies.data.entity.JobEntity
+import test.richmond.movies.data.entity.MovieEntity
 import test.richmond.movies.data.entity.PersonEntity
 import test.richmond.movies.data.repository.PersonRepository
 import test.richmond.movies.model.dto.PersonInput
@@ -51,8 +55,50 @@ class PersonServiceTest {
             id = 1L,
             firstName = "Peter",
             lastName = "Michael",
-            title = "Actor",
+            title = "Actor")
+        person.jobs.add(
+            CrewJobEntity(
+                id = 1L,
+                jobName = "Writer",
+                movie = MovieEntity(
+                    id = 10L,
+                    title = "Movie A",
+                    summary = "",
+                    synopsis = "",
+                    releaseYear = 2022
+                ),
+                person = person
+            )
         )
+        person.jobs.add(
+            CastJobEntity(
+                id = 2L,
+                characterName = "Movie star",
+                movie = MovieEntity(
+                    id = 11L,
+                    title = "Movie B",
+                    summary = "",
+                    synopsis = "",
+                    releaseYear = 2021
+                ),
+                person = person
+            )
+        )
+        person.jobs.add(
+            CrewJobEntity(
+                id = 3L,
+                jobName = "Lighting",
+                movie = MovieEntity(
+                    id = 12L,
+                    title = "Movie C",
+                    summary = "",
+                    synopsis = "",
+                    releaseYear = 2023
+                ),
+                person = person
+            )
+        )
+
         whenever(personRepository.findById(any())).thenReturn(Optional.of(person))
 
         val result = personService.getPersonById(1L)
@@ -62,6 +108,26 @@ class PersonServiceTest {
         assertThat(result.firstName).isEqualTo("Peter")
         assertThat(result.lastName).isEqualTo("Michael")
         assertThat(result.title).isEqualTo("Actor")
+
+        assertThat(result.workedOn).hasSize(2)
+        assertThat(result.workedOn[0].jobId).isEqualTo(3L)
+        assertThat(result.workedOn[0].jobName).isEqualTo("Lighting")
+        assertThat(result.workedOn[0].movieId).isEqualTo(12L)
+        assertThat(result.workedOn[0].movieName).isEqualTo("Movie C")
+        assertThat(result.workedOn[0].releaseYear).isEqualTo(2023)
+
+        assertThat(result.workedOn[1].jobId).isEqualTo(1L)
+        assertThat(result.workedOn[1].jobName).isEqualTo("Writer")
+        assertThat(result.workedOn[1].movieId).isEqualTo(10L)
+        assertThat(result.workedOn[1].movieName).isEqualTo("Movie A")
+        assertThat(result.workedOn[1].releaseYear).isEqualTo(2022)
+
+        assertThat(result.actedIn).hasSize(1)
+        assertThat(result.actedIn[0].jobId).isEqualTo(2L)
+        assertThat(result.actedIn[0].characterName).isEqualTo("Movie star")
+        assertThat(result.actedIn[0].movieId).isEqualTo(11L)
+        assertThat(result.actedIn[0].movieName).isEqualTo("Movie B")
+        assertThat(result.actedIn[0].releaseYear).isEqualTo(2021)
     }
 
     @Test

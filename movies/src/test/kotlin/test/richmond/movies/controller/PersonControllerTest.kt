@@ -10,8 +10,10 @@ import org.springframework.context.annotation.Import
 import org.springframework.graphql.test.tester.GraphQlTester
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import test.richmond.movies.config.GraphQLConfig
+import test.richmond.movies.model.dto.ActedIn
 import test.richmond.movies.model.dto.PersonDTO
 import test.richmond.movies.model.dto.PersonsDTO
+import test.richmond.movies.model.dto.WorkedOn
 import test.richmond.movies.service.PersonService
 
 @GraphQlTest(PersonController::class)
@@ -45,7 +47,25 @@ class PersonControllerTest @Autowired constructor(
             id = 1L,
             firstName = "John",
             lastName = "Smith",
-            title = "Superstar"
+            title = "Superstar",
+            workedOn = listOf(
+                WorkedOn(
+                    jobId = 11L,
+                    jobName = "Director",
+                    movieId = 21L,
+                    movieName = "Movie A",
+                    releaseYear = 2021
+                )
+            ),
+            actedIn = listOf(
+                ActedIn(
+                    jobId = 12L,
+                    characterName = "Passer-by",
+                    movieId = 21L,
+                    movieName = "Movie A",
+                    releaseYear = 2021
+                )
+            )
         )
         whenever(personService.getPersonById(any())).thenReturn(person)
 
@@ -56,6 +76,20 @@ class PersonControllerTest @Autowired constructor(
                     firstName
                     lastName
                     title
+                    workedOn {
+                        jobId
+                        jobName
+                        movieId
+                        movieName
+                        releaseYear
+                    }
+                    actedIn {
+                        jobId
+                        characterName
+                        movieId
+                        movieName
+                        releaseYear
+                    }
                 }
             }""".trimIndent()).execute()
             .path("person")
@@ -64,7 +98,25 @@ class PersonControllerTest @Autowired constructor(
                     "id": "1",
                     "firstName": "John",
                     "lastName": "Smith",
-                    "title": "Superstar"
+                    "title": "Superstar",
+                    "workedOn": [
+                        {
+                            "jobId": 11,
+                            "jobName": "Director",
+                            "movieId": 21,
+                            "movieName": "Movie A",
+                            "releaseYear": 2021
+                        }
+                    ],
+                    "actedIn": [
+                        {
+                            "jobId": 12,
+                            "characterName": "Passer-by",
+                            "movieId": 21,
+                            "movieName": "Movie A",
+                            "releaseYear": 2021
+                        }
+                    ]
                 }""".trimIndent())
 
         verify(personService).getPersonById(1)
