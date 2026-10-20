@@ -1,0 +1,67 @@
+#scalar Date
+
+# Query type
+type Query {
+    persons: [Person!]!
+    person(id: Int!): Person
+    movie(id: Int!): Movie
+}
+
+type Mutation {
+    addMovie(movie: MovieInput!): Movie!
+}
+
+# object type
+type Movie {
+    id: ID!
+    title: String!
+    summary: String
+    releaseYear: Int!
+    rating: String!
+    cast: [Cast!]!
+    crew: [Crew!]!
+}
+
+type Cast {
+    personId: ID!
+    firstName: String!
+    lastName: String
+    sequence: Int!
+    characterName: String!
+}
+
+type Crew {
+    personId: ID!
+    firstName: String!
+    lastName: String
+    sequence: Int!
+    jobName: String!
+}
+
+type Person {
+    id: ID!
+    firstName: String!
+    lastName: String
+    title: String
+}
+
+input MovieInput {
+    title: String!
+    summary: String
+    releaseYear: Int!
+    rating: String!
+    cast: [MovieCastInput!]
+    crew: [MovieCrewInput!]
+}
+
+input MovieCastInput {
+    personId: Int!
+    characterName: String!
+    sequence: Int
+}
+
+input MovieCrewInput {
+    personId: Int!
+    jobName: String!
+    sequence: Int
+}
