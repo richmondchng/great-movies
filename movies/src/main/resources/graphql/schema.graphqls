@@ -2,7 +2,7 @@
 
 # Query type
 type Query {
-    persons: [Person!]!
+    persons(page: Int, pageSize: Int): [Person!]!
     person(id: Int!): Person
     movie(id: Int!): Movie
 }

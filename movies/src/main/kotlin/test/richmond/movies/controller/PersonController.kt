@@ -14,9 +14,9 @@ class PersonController(
     private val logger = LoggerFactory.getLogger(PersonController::class.java)
 
     @QueryMapping(name = "persons")
-    fun persons() : List<PersonDTO> {
+    fun persons(@Argument page: Int = 0, @Argument pageSize: Int = 20) : List<PersonDTO> {
         logger.info("Get all persons")
-        return personService.getPersons()
+        return personService.getPersons(page, pageSize)
     }
 
     @QueryMapping(name = "person")

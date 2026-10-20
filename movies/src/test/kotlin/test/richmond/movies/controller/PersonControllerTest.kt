@@ -96,11 +96,11 @@ class PersonControllerTest @Autowired constructor(
 
     @Test
     fun `should return empty list if no persons`() {
-        whenever(personService.getPersons()).thenReturn(listOf())
+        whenever(personService.getPersons(any(), any())).thenReturn(listOf())
 
         graphQlTester.document("""
             query {
-                persons {
+                persons(page: 1, pageSize: 10) {
                     id
                     firstName
                     lastName
@@ -111,7 +111,7 @@ class PersonControllerTest @Autowired constructor(
             .matchesJson("""
                 []""".trimIndent())
 
-        verify(personService).getPersons()
+        verify(personService).getPersons(1, 10)
     }
 
     @Test
@@ -128,11 +128,11 @@ class PersonControllerTest @Autowired constructor(
             lastName = "Smith",
             title = "Director"
         )
-        whenever(personService.getPersons()).thenReturn(listOf(person1, person2))
+        whenever(personService.getPersons(any(), any())).thenReturn(listOf(person1, person2))
 
         graphQlTester.document("""
             query {
-                persons {
+                persons(page: 1, pageSize: 10) {
                     id
                     firstName
                     lastName
@@ -156,6 +156,6 @@ class PersonControllerTest @Autowired constructor(
                     }
                 ]""".trimIndent())
 
-        verify(personService).getPersons()
+        verify(personService).getPersons(1, 10)
     }
 }
