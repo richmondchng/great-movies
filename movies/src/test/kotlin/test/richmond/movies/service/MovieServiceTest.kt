@@ -226,7 +226,7 @@ class MovieServiceTest {
     }
 
     @Test
-    fun `should add movie if id is 0`() {
+    fun `should add movie`() {
         val director = constructPerson(1L, "John", "F", "Director/Actor")
         val actor1 = constructPerson(4L, "Robert", "B", "Actor")
         whenever(personRepository.findAllById(any())).thenReturn(listOf(director, actor1))

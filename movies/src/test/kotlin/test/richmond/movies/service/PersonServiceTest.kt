@@ -1,5 +1,6 @@
 package test.richmond.movies.service
 
+import java.time.Instant
 import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
@@ -15,6 +16,7 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import test.richmond.movies.data.entity.PersonEntity
 import test.richmond.movies.data.repository.PersonRepository
+import test.richmond.movies.model.dto.PersonInput
 import kotlin.test.Test
 
 @ExtendWith(MockitoExtension::class)
@@ -106,5 +108,29 @@ class PersonServiceTest {
         assertThat(result.persons[1].firstName).isEqualTo("Jason")
         assertThat(result.persons[1].lastName).isEqualTo("Bear")
         assertThat(result.persons[1].title).isEqualTo("Actor / Director")
+    }
+
+    @Test
+    fun `should add person`() {
+        whenever(personRepository.save<PersonEntity>(any())).thenReturn(
+            PersonEntity(
+                id = 2L,
+                firstName = "Peter",
+                lastName = "Michael",
+                title = "Actor",
+                createdAt = Instant.now()
+            )
+        )
+
+        val result = personService.addPerson(PersonInput(
+            firstName = "Peter",
+            lastName = "Michael",
+            title = "Actor",
+        ))
+
+        assertThat(result.id).isEqualTo(2L)
+        assertThat(result.firstName).isEqualTo("Peter")
+        assertThat(result.lastName).isEqualTo("Michael")
+        assertThat(result.title).isEqualTo("Actor")
     }
 }

@@ -16,7 +16,7 @@ class PersonEntity (
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    val id: Long = 0L,
 
     @Column(nullable = false, name = "first_name")
     val firstName: String = "",

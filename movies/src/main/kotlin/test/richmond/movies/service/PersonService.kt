@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 import test.richmond.movies.data.entity.PersonEntity
 import test.richmond.movies.data.repository.PersonRepository
 import test.richmond.movies.model.dto.PersonDTO
+import test.richmond.movies.model.dto.PersonInput
 import test.richmond.movies.model.dto.PersonsDTO
 
 @Service
@@ -29,9 +30,22 @@ class PersonService(
         return null
     }
 
+    fun addPerson(person: PersonInput): PersonDTO {
+        val result = personRepository.save(mapToEntity(person))
+        return mapToDTO(result)
+    }
+
     private fun mapToDTO(person: PersonEntity): PersonDTO {
         return PersonDTO(
             id = person.id,
+            firstName = person.firstName,
+            lastName = person.lastName,
+            title = person.title,
+        )
+    }
+
+    private fun mapToEntity(person: PersonInput) : PersonEntity {
+        return PersonEntity(
             firstName = person.firstName,
             lastName = person.lastName,
             title = person.title,

@@ -10,6 +10,7 @@ type Query {
 
 type Mutation {
     addMovie(movie: MovieInput!): Movie!
+    addPerson(person: PersonInput!): Person!
 }
 
 # object type
@@ -77,4 +78,10 @@ input MovieCrewInput {
     personId: Int!
     jobName: String!
     sequence: Int
+}
+
+input PersonInput {
+    firstName: String!
+    lastName: String
+    title: String
 }

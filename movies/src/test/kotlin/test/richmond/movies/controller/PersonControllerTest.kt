@@ -185,4 +185,38 @@ class PersonControllerTest @Autowired constructor(
 
         verify(personService).getPersons(1, 10)
     }
+
+    @Test
+    fun `should return person after add`() {
+        whenever(personService.addPerson(any())).thenReturn(
+            PersonDTO(
+                id = 1L,
+                firstName = "John",
+                lastName = "Smith",
+                title = "Superstar"
+            )
+        )
+
+        graphQlTester.document("""
+            mutation {
+                addPerson(person: {
+                    firstName: "John"
+                    lastName: "Smith"
+                    title: "Superstar"
+                }) {
+                    id
+                    firstName
+                    lastName
+                    title
+                }
+            }""".trimIndent()).execute()
+            .path("addPerson")
+            .matchesJson("""
+                {
+                    "id": "1",
+                    "firstName": "John",
+                    "lastName": "Smith",
+                    "title": "Superstar"
+                }""".trimIndent())
+    }
 }
