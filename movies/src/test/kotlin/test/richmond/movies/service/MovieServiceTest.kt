@@ -8,7 +8,6 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -16,6 +15,9 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import test.richmond.movies.data.entity.CastJobEntity
 import test.richmond.movies.data.entity.CrewJobEntity
 import test.richmond.movies.data.entity.MovieEntity
@@ -26,6 +28,7 @@ import test.richmond.movies.exception.PersonNotFoundException
 import test.richmond.movies.model.dto.MovieCastInput
 import test.richmond.movies.model.dto.MovieCrewInput
 import test.richmond.movies.model.dto.MovieInput
+import kotlin.test.Test
 
 @ExtendWith(MockitoExtension::class)
 class MovieServiceTest {
@@ -45,6 +48,56 @@ class MovieServiceTest {
 
     @AfterEach
     fun tearDown() {}
+
+    @Test
+    fun `should return empty list if no movies`() {
+        val pageable = PageRequest.of(0, 10)
+        whenever(movieRepository.findAll(any<Pageable>())).thenReturn(PageImpl(listOf(), pageable, 0))
+
+        val result = movieService.getMovies(0, 10)
+
+        assertThat(result.movies).isEmpty()
+        assertThat(result.page).isEqualTo(0)
+        assertThat(result.pageSize).isEqualTo(10)
+    }
+
+    @Test
+    fun `should return list if there are movies`() {
+        val pageable = PageRequest.of(0, 10)
+        whenever(movieRepository.findAll(any<Pageable>()))
+            .thenReturn(PageImpl(
+                listOf(
+                    constructMovieEntity(
+                        id = 1L,
+                        title = "Movie A",
+                        summary = "Movie A summary",
+                        synopsis = "Movie A synopsis",
+                        rating = BigDecimal.valueOf(4.09999),
+                        releaseYear = 2020),
+                    constructMovieEntity(
+                        id = 2L,
+                        title = "Movie B",
+                        summary = "Movie B summary",
+                        synopsis = "Movie B synopsis",
+                        rating = BigDecimal.valueOf(4.09999),
+                        releaseYear = 2020)
+                ),
+                pageable,
+                0)
+            )
+
+        val result = movieService.getMovies(0, 10)
+
+        assertThat(result.page).isEqualTo(0)
+        assertThat(result.pageSize).isEqualTo(10)
+
+        assertThat(result.movies).hasSize(2)
+        assertThat(result.movies[0].id).isEqualTo(1L)
+        assertThat(result.movies[0].title).isEqualTo("Movie A")
+
+        assertThat(result.movies[1].id).isEqualTo(2L)
+        assertThat(result.movies[1].title).isEqualTo("Movie B")
+    }
 
     @Test
     fun `should not return movie if id is invalid`() {

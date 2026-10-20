@@ -4,6 +4,7 @@
 type Query {
     persons(page: Int, pageSize: Int): [Person!]!
     person(id: Int!): Person
+    movies(page: Int = 0, pageSize: Int = 20): Movies!
     movie(id: Int!): Movie
 }
 
@@ -12,6 +13,12 @@ type Mutation {
 }
 
 # object type
+type Movies {
+    movies: [Movie!]!
+    page: Int!
+    pageSize: Int!
+}
+
 type Movie {
     id: ID!
     title: String!
