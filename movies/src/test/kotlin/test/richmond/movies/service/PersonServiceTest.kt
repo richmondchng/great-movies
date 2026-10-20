@@ -69,7 +69,9 @@ class PersonServiceTest {
 
         val result = personService.getPersons(0, 10)
 
-        assertThat(result).isEmpty()
+        assertThat(result.page).isEqualTo(0)
+        assertThat(result.pageSize).isEqualTo(10)
+        assertThat(result.persons).isEmpty()
     }
 
     @Test
@@ -91,16 +93,18 @@ class PersonServiceTest {
 
         val result = personService.getPersons(0, 10)
 
-        assertThat(result).hasSize(2)
+        assertThat(result.page).isEqualTo(0)
+        assertThat(result.pageSize).isEqualTo(10)
+        assertThat(result.persons).hasSize(2)
 
-        assertThat(result[0].id).isEqualTo(1L)
-        assertThat(result[0].firstName).isEqualTo("Peter")
-        assertThat(result[0].lastName).isEqualTo("Michael")
-        assertThat(result[0].title).isEqualTo("Actor")
+        assertThat(result.persons[0].id).isEqualTo(1L)
+        assertThat(result.persons[0].firstName).isEqualTo("Peter")
+        assertThat(result.persons[0].lastName).isEqualTo("Michael")
+        assertThat(result.persons[0].title).isEqualTo("Actor")
 
-        assertThat(result[1].id).isEqualTo(2L)
-        assertThat(result[1].firstName).isEqualTo("Jason")
-        assertThat(result[1].lastName).isEqualTo("Bear")
-        assertThat(result[1].title).isEqualTo("Actor / Director")
+        assertThat(result.persons[1].id).isEqualTo(2L)
+        assertThat(result.persons[1].firstName).isEqualTo("Jason")
+        assertThat(result.persons[1].lastName).isEqualTo("Bear")
+        assertThat(result.persons[1].title).isEqualTo("Actor / Director")
     }
 }

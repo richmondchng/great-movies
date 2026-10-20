@@ -11,6 +11,7 @@ import org.springframework.graphql.test.tester.GraphQlTester
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import test.richmond.movies.config.GraphQLConfig
 import test.richmond.movies.model.dto.PersonDTO
+import test.richmond.movies.model.dto.PersonsDTO
 import test.richmond.movies.service.PersonService
 
 @GraphQlTest(PersonController::class)
@@ -96,22 +97,35 @@ class PersonControllerTest @Autowired constructor(
 
     @Test
     fun `should return empty list if no persons`() {
-        whenever(personService.getPersons(any(), any())).thenReturn(listOf())
+        whenever(personService.getPersons(any(), any())).thenReturn(
+            PersonsDTO(
+                persons = listOf(),
+                page = 0,
+                pageSize = 20)
+        )
 
         graphQlTester.document("""
             query {
-                persons(page: 1, pageSize: 10) {
-                    id
-                    firstName
-                    lastName
-                    title
+                persons {
+                    persons {
+                        id
+                        firstName
+                        lastName
+                        title
+                    }
+                    page
+                    pageSize
                 }
             }""".trimIndent()).execute()
             .path("persons")
             .matchesJson("""
-                []""".trimIndent())
+                {
+                    "persons": [],
+                    "page": 0,
+                    "pageSize": 20
+                }""".trimIndent())
 
-        verify(personService).getPersons(1, 10)
+        verify(personService).getPersons(0, 20)
     }
 
     @Test
@@ -128,33 +142,46 @@ class PersonControllerTest @Autowired constructor(
             lastName = "Smith",
             title = "Director"
         )
-        whenever(personService.getPersons(any(), any())).thenReturn(listOf(person1, person2))
+        whenever(personService.getPersons(any(), any())).thenReturn(
+            PersonsDTO(
+                persons = listOf(person1, person2),
+                page = 1,
+                pageSize = 10)
+        )
 
         graphQlTester.document("""
             query {
                 persons(page: 1, pageSize: 10) {
-                    id
-                    firstName
-                    lastName
-                    title
+                    persons {
+                        id
+                        firstName
+                        lastName
+                        title
+                    }
+                    page
+                    pageSize
                 }
             }""".trimIndent()).execute()
             .path("persons")
             .matchesJson("""
-                [
-                    {
-                        "id": "1",
-                        "firstName": "John",
-                        "lastName": "Smith",
-                        "title": "Superstar"
-                    },
-                    {
-                        "id": "2",
-                        "firstName": "Jane",
-                        "lastName": "Smith",
-                        "title": "Director"
-                    }
-                ]""".trimIndent())
+                {
+                    "persons": [
+                        {
+                            "id": "1",
+                            "firstName": "John",
+                            "lastName": "Smith",
+                            "title": "Superstar"
+                        },
+                        {
+                            "id": "2",
+                            "firstName": "Jane",
+                            "lastName": "Smith",
+                            "title": "Director"
+                        }
+                    ],
+                    page: 1,
+                    pageSize: 10
+                }""".trimIndent())
 
         verify(personService).getPersons(1, 10)
     }

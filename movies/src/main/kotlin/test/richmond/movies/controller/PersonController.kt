@@ -5,6 +5,7 @@ import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.stereotype.Controller
 import test.richmond.movies.model.dto.PersonDTO
+import test.richmond.movies.model.dto.PersonsDTO
 import test.richmond.movies.service.PersonService
 
 @Controller
@@ -14,7 +15,7 @@ class PersonController(
     private val logger = LoggerFactory.getLogger(PersonController::class.java)
 
     @QueryMapping(name = "persons")
-    fun persons(@Argument page: Int = 0, @Argument pageSize: Int = 20) : List<PersonDTO> {
+    fun persons(@Argument page: Int, @Argument pageSize: Int) : PersonsDTO {
         logger.info("Get all persons")
         return personService.getPersons(page, pageSize)
     }

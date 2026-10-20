@@ -4,28 +4,32 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import test.richmond.movies.data.entity.PersonEntity
 import test.richmond.movies.data.repository.PersonRepository
-import test.richmond.movies.exception.PersonNotFoundException
 import test.richmond.movies.model.dto.PersonDTO
+import test.richmond.movies.model.dto.PersonsDTO
 
 @Service
 class PersonService(
     val personRepository: PersonRepository
 ) {
 
-    fun getPersons(page: Int, pageSize: Int): List<PersonDTO> {
+    fun getPersons(page: Int, pageSize: Int): PersonsDTO {
         val persons = personRepository.findAll(PageRequest.of(page, pageSize))
-        return persons.stream().map { p -> mapToDto(p) }.toList()
+        return PersonsDTO(
+            persons = persons.stream().map { p -> mapToDTO(p) }.toList(),
+            page = page,
+            pageSize = pageSize
+        )
     }
 
     fun getPersonById(id: Long) : PersonDTO? {
         val personEntity = personRepository.findById(id)
         if(personEntity.isPresent) {
-            return mapToDto(personEntity.get())
+            return mapToDTO(personEntity.get())
         }
         return null
     }
 
-    private fun mapToDto(person: PersonEntity): PersonDTO {
+    private fun mapToDTO(person: PersonEntity): PersonDTO {
         return PersonDTO(
             id = person.id,
             firstName = person.firstName,
