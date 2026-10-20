@@ -2,6 +2,7 @@ package test.richmond.movies.service
 
 import java.math.BigDecimal
 import java.math.RoundingMode
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import test.richmond.movies.data.entity.CastJobEntity
 import test.richmond.movies.data.entity.CrewJobEntity
@@ -17,6 +18,8 @@ import test.richmond.movies.model.dto.MovieCastInput
 import test.richmond.movies.model.dto.MovieCrewInput
 import test.richmond.movies.model.dto.MovieDTO
 import test.richmond.movies.model.dto.MovieInput
+import test.richmond.movies.model.dto.MoviesDTO
+import test.richmond.movies.model.dto.PersonDTO
 import kotlin.Long
 
 @Service
@@ -24,6 +27,15 @@ class MovieService(
     val movieRepository: MovieRepository,
     val personRepository: PersonRepository
 ) {
+
+    fun getMovies(page: Int, pageSize: Int): MoviesDTO {
+        val movies = movieRepository.findAll(PageRequest.of(page, pageSize))
+        return MoviesDTO(
+            movies = movies.stream().map { m -> mapToDTO(m) }.toList(),
+            page = page,
+            pageSize = pageSize
+        )
+    }
 
     fun getMovieById(id: Long): MovieDTO? {
         val movie = movieRepository.findById(id).orElse(null)

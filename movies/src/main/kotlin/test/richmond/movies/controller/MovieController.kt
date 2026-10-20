@@ -7,6 +7,8 @@ import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.stereotype.Controller
 import test.richmond.movies.model.dto.MovieDTO
 import test.richmond.movies.model.dto.MovieInput
+import test.richmond.movies.model.dto.MoviesDTO
+import test.richmond.movies.model.dto.PersonDTO
 import test.richmond.movies.service.MovieService
 
 @Controller
@@ -15,6 +17,12 @@ class MovieController(
 ) {
 
     private val logger = LoggerFactory.getLogger(MovieController::class.java)
+
+    @QueryMapping(name = "movies")
+    fun movies(@Argument page: Int, @Argument pageSize: Int) : MoviesDTO {
+        logger.info("Get all movies for page $page with page size $pageSize")
+        return movieService.getMovies(page, pageSize)
+    }
 
     @QueryMapping(name = "movie")
     fun movie(@Argument id: Long) : MovieDTO? {

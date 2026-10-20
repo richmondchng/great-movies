@@ -2,16 +2,24 @@
 
 # Query type
 type Query {
-    persons: [Person!]!
+    persons(page: Int = 0, pageSize: Int = 20): Persons!
     person(id: Int!): Person
+    movies(page: Int = 0, pageSize: Int = 20): Movies!
     movie(id: Int!): Movie
 }
 
 type Mutation {
     addMovie(movie: MovieInput!): Movie!
+    addPerson(person: PersonInput!): Person!
 }
 
 # object type
+type Movies {
+    movies: [Movie!]!
+    page: Int!
+    pageSize: Int!
+}
+
 type Movie {
     id: ID!
     title: String!
@@ -38,11 +46,35 @@ type Crew {
     jobName: String!
 }
 
+type Persons {
+    persons: [Person!]!
+    page: Int!
+    pageSize: Int!
+}
+
 type Person {
     id: ID!
     firstName: String!
     lastName: String
     title: String
+    workedOn: [WorkedOn!]!
+    actedIn: [ActedIn!]!
+}
+
+type WorkedOn {
+    jobId: Int!
+    jobName: String!
+    movieId: Int!
+    movieName: String!
+    releaseYear: Int!
+}
+
+type ActedIn {
+    jobId: Int!
+    characterName: String!
+    movieId: Int!
+    movieName: String!
+    releaseYear: Int!
 }
 
 input MovieInput {
@@ -64,4 +96,10 @@ input MovieCrewInput {
     personId: Int!
     jobName: String!
     sequence: Int
+}
+
+input PersonInput {
+    firstName: String!
+    lastName: String
+    title: String
 }

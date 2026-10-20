@@ -14,6 +14,7 @@ import test.richmond.movies.config.GraphQLConfig
 import test.richmond.movies.model.dto.CastDTO
 import test.richmond.movies.model.dto.CrewDTO
 import test.richmond.movies.model.dto.MovieDTO
+import test.richmond.movies.model.dto.MoviesDTO
 import test.richmond.movies.service.MovieService
 
 @GraphQlTest(MovieController::class)
@@ -24,6 +25,83 @@ class MovieControllerTest @Autowired constructor(
 
     @MockitoBean
     lateinit var movieService: MovieService
+
+    @Test
+    fun `should return empty list if no movies`() {
+        whenever(movieService.getMovies(any(), any())).thenReturn(
+            MoviesDTO(
+                movies = listOf(),
+                page = 0,
+                pageSize = 20
+            )
+        )
+
+        graphQlTester.document("""
+            query {
+                movies {
+                    movies {
+                        id
+                        title
+                    }
+                    page
+                    pageSize
+                }
+            }""".trimIndent()).execute()
+            .path("movies")
+            .matchesJson("""
+                {
+                    "movies": [],
+                    "page": 0,
+                    "pageSize": 20
+                }""".trimIndent())
+
+        verify(movieService).getMovies(0, 20)
+    }
+
+    @Test
+    fun `should return list of movies`() {
+        whenever(movieService.getMovies(any(), any()))
+            .thenReturn(
+                MoviesDTO(
+                    movies = listOf(
+                        constructMovieDTO(id = 1L, title = "Movie 1"),
+                        constructMovieDTO(id = 2L, title = "Movie 2")
+                    ),
+                    page = 1,
+                    pageSize = 10
+                )
+            )
+
+        graphQlTester.document("""
+            query {
+                movies(page: 1, pageSize: 10) {
+                    movies {
+                        id
+                        title
+                    }
+                    page
+                    pageSize
+                }
+            }""".trimIndent()).execute()
+            .path("movies")
+            .matchesJson("""
+                {
+                    "movies": [
+                        {
+                            "id": "1",
+                            "title": "Movie 1"
+                        },
+                        {
+                            "id": "2",
+                            "title": "Movie 2"
+                        }
+                    ],
+                    "page": 1,
+                    "pageSize": 10
+                }""".trimIndent())
+
+        verify(movieService).getMovies(1, 10)
+    }
 
     @Test
     fun `should not return anything if movie id is invalid`() {

@@ -10,7 +10,10 @@ import org.springframework.context.annotation.Import
 import org.springframework.graphql.test.tester.GraphQlTester
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import test.richmond.movies.config.GraphQLConfig
+import test.richmond.movies.model.dto.ActedIn
 import test.richmond.movies.model.dto.PersonDTO
+import test.richmond.movies.model.dto.PersonsDTO
+import test.richmond.movies.model.dto.WorkedOn
 import test.richmond.movies.service.PersonService
 
 @GraphQlTest(PersonController::class)
@@ -44,7 +47,25 @@ class PersonControllerTest @Autowired constructor(
             id = 1L,
             firstName = "John",
             lastName = "Smith",
-            title = "Superstar"
+            title = "Superstar",
+            workedOn = listOf(
+                WorkedOn(
+                    jobId = 11L,
+                    jobName = "Director",
+                    movieId = 21L,
+                    movieName = "Movie A",
+                    releaseYear = 2021
+                )
+            ),
+            actedIn = listOf(
+                ActedIn(
+                    jobId = 12L,
+                    characterName = "Passer-by",
+                    movieId = 21L,
+                    movieName = "Movie A",
+                    releaseYear = 2021
+                )
+            )
         )
         whenever(personService.getPersonById(any())).thenReturn(person)
 
@@ -55,6 +76,20 @@ class PersonControllerTest @Autowired constructor(
                     firstName
                     lastName
                     title
+                    workedOn {
+                        jobId
+                        jobName
+                        movieId
+                        movieName
+                        releaseYear
+                    }
+                    actedIn {
+                        jobId
+                        characterName
+                        movieId
+                        movieName
+                        releaseYear
+                    }
                 }
             }""".trimIndent()).execute()
             .path("person")
@@ -63,7 +98,25 @@ class PersonControllerTest @Autowired constructor(
                     "id": "1",
                     "firstName": "John",
                     "lastName": "Smith",
-                    "title": "Superstar"
+                    "title": "Superstar",
+                    "workedOn": [
+                        {
+                            "jobId": 11,
+                            "jobName": "Director",
+                            "movieId": 21,
+                            "movieName": "Movie A",
+                            "releaseYear": 2021
+                        }
+                    ],
+                    "actedIn": [
+                        {
+                            "jobId": 12,
+                            "characterName": "Passer-by",
+                            "movieId": 21,
+                            "movieName": "Movie A",
+                            "releaseYear": 2021
+                        }
+                    ]
                 }""".trimIndent())
 
         verify(personService).getPersonById(1)
@@ -96,22 +149,35 @@ class PersonControllerTest @Autowired constructor(
 
     @Test
     fun `should return empty list if no persons`() {
-        whenever(personService.getPersons()).thenReturn(listOf())
+        whenever(personService.getPersons(any(), any())).thenReturn(
+            PersonsDTO(
+                persons = listOf(),
+                page = 0,
+                pageSize = 20)
+        )
 
         graphQlTester.document("""
             query {
                 persons {
-                    id
-                    firstName
-                    lastName
-                    title
+                    persons {
+                        id
+                        firstName
+                        lastName
+                        title
+                    }
+                    page
+                    pageSize
                 }
             }""".trimIndent()).execute()
             .path("persons")
             .matchesJson("""
-                []""".trimIndent())
+                {
+                    "persons": [],
+                    "page": 0,
+                    "pageSize": 20
+                }""".trimIndent())
 
-        verify(personService).getPersons()
+        verify(personService).getPersons(0, 20)
     }
 
     @Test
@@ -128,34 +194,81 @@ class PersonControllerTest @Autowired constructor(
             lastName = "Smith",
             title = "Director"
         )
-        whenever(personService.getPersons()).thenReturn(listOf(person1, person2))
+        whenever(personService.getPersons(any(), any())).thenReturn(
+            PersonsDTO(
+                persons = listOf(person1, person2),
+                page = 1,
+                pageSize = 10)
+        )
 
         graphQlTester.document("""
             query {
-                persons {
+                persons(page: 1, pageSize: 10) {
+                    persons {
+                        id
+                        firstName
+                        lastName
+                        title
+                    }
+                    page
+                    pageSize
+                }
+            }""".trimIndent()).execute()
+            .path("persons")
+            .matchesJson("""
+                {
+                    "persons": [
+                        {
+                            "id": "1",
+                            "firstName": "John",
+                            "lastName": "Smith",
+                            "title": "Superstar"
+                        },
+                        {
+                            "id": "2",
+                            "firstName": "Jane",
+                            "lastName": "Smith",
+                            "title": "Director"
+                        }
+                    ],
+                    page: 1,
+                    pageSize: 10
+                }""".trimIndent())
+
+        verify(personService).getPersons(1, 10)
+    }
+
+    @Test
+    fun `should return person after add`() {
+        whenever(personService.addPerson(any())).thenReturn(
+            PersonDTO(
+                id = 1L,
+                firstName = "John",
+                lastName = "Smith",
+                title = "Superstar"
+            )
+        )
+
+        graphQlTester.document("""
+            mutation {
+                addPerson(person: {
+                    firstName: "John"
+                    lastName: "Smith"
+                    title: "Superstar"
+                }) {
                     id
                     firstName
                     lastName
                     title
                 }
             }""".trimIndent()).execute()
-            .path("persons")
+            .path("addPerson")
             .matchesJson("""
-                [
-                    {
-                        "id": "1",
-                        "firstName": "John",
-                        "lastName": "Smith",
-                        "title": "Superstar"
-                    },
-                    {
-                        "id": "2",
-                        "firstName": "Jane",
-                        "lastName": "Smith",
-                        "title": "Director"
-                    }
-                ]""".trimIndent())
-
-        verify(personService).getPersons()
+                {
+                    "id": "1",
+                    "firstName": "John",
+                    "lastName": "Smith",
+                    "title": "Superstar"
+                }""".trimIndent())
     }
 }
