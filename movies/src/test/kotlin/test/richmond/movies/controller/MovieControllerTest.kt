@@ -64,17 +64,17 @@ class MovieControllerTest @Autowired constructor(
                         {
                             "personId": "1",
                             "firstName": "Peter",
-                            "lastName": "Parker",
-                            "sequence": 1,
-                            "characterName": "Spiderman"
+                            "lastName": "P",
+                            "sequence": 99,
+                            "characterName": "Test Character"
                         }
                     ],
                     "crew": [
                        {
                             "personId": "2",
                             "firstName": "Norman",
-                            "lastName": "Osborn",
-                            "sequence": 1,
+                            "lastName": "O",
+                            "sequence": 99,
                             "jobName": "Director"
                         }
                     ]
@@ -114,12 +114,38 @@ class MovieControllerTest @Autowired constructor(
                     summary: "Test summary 2"
                     rating: "1.0"
                     releaseYear: 2026
+                    cast: [
+                        {
+                            personId: 1,
+                            characterName: "Test Character"
+                        }
+                    ]
+                    crew: [
+                        {
+                            personId: 2,
+                            jobName: "Director"
+                        }
+                    ]
                 }) {
                     id
                     title
                     summary
                     rating
                     releaseYear
+                    cast {
+                        firstName
+                        lastName
+                        personId
+                        characterName
+                        sequence
+                    }
+                    crew {
+                        firstName
+                        jobName
+                        lastName
+                        personId
+                        sequence
+                    }
                 }
             }""".trimIndent()).execute()
             .path("addMovie")
@@ -129,7 +155,25 @@ class MovieControllerTest @Autowired constructor(
                     "title": "Test title 2",
                     "summary": "Test summary 2",
                     "rating": "1.0",
-                    "releaseYear": 2026
+                    "releaseYear": 2026,
+                    "cast": [
+                        {
+                            "firstName": "Peter",
+                            "lastName": "P",
+                            "personId": "1",
+                            "characterName": "Test Character",
+                            "sequence": 99
+                        }
+                    ],
+                    "crew": [
+                        {
+                            "firstName": "Norman",
+                            "jobName": "Director",
+                            "lastName": "O",
+                            "personId": "2",
+                            "sequence": 99
+                        }
+                    ]
                 }""".trimIndent())
     }
 
@@ -146,8 +190,8 @@ class MovieControllerTest @Autowired constructor(
             rating = rating,
             releaseYear = releaseYear,
             Instant.now(),
-            cast = listOf(CastDTO(1L, "Peter", "Parker", 1, "Spiderman", 1L)),
-            crew = listOf(CrewDTO(2L, "Norman", "Osborn", 1, "Director", 2L))
+            cast = listOf(CastDTO(1L, "Peter", "P", 99, "Test Character", 1L)),
+            crew = listOf(CrewDTO(2L, "Norman", "O", 99, "Director", 2L))
         )
     }
 }

@@ -8,15 +8,21 @@ import test.richmond.movies.data.entity.CrewJobEntity
 import test.richmond.movies.data.entity.JobEntity
 import test.richmond.movies.data.repository.MovieRepository
 import test.richmond.movies.data.entity.MovieEntity
+import test.richmond.movies.data.entity.PersonEntity
+import test.richmond.movies.data.repository.PersonRepository
+import test.richmond.movies.exception.PersonNotFoundException
 import test.richmond.movies.model.dto.CastDTO
 import test.richmond.movies.model.dto.CrewDTO
+import test.richmond.movies.model.dto.MovieCastInput
+import test.richmond.movies.model.dto.MovieCrewInput
 import test.richmond.movies.model.dto.MovieDTO
 import test.richmond.movies.model.dto.MovieInput
 import kotlin.Long
 
 @Service
 class MovieService(
-    var movieRepository: MovieRepository
+    val movieRepository: MovieRepository,
+    val personRepository: PersonRepository
 ) {
 
     fun findMovieById(id: Long): MovieDTO? {
@@ -80,13 +86,55 @@ class MovieService(
     }
 
     private fun mapToEntity(movieInput: MovieInput) : MovieEntity {
-        return MovieEntity(
+
+        val movieEntity = MovieEntity(
             id = 0L,
             title = movieInput.title,
             summary = movieInput.summary,
             synopsis = movieInput.summary,
             rating = BigDecimal(movieInput.rating),
             releaseYear = movieInput.releaseYear
+        )
+
+        val personIds = buildSet{
+            movieInput.crew.forEach { add(it.personId) }
+            movieInput.cast.forEach { add(it.personId) }
+        }
+
+        val personMap = personRepository.findAllById(personIds).associateBy { it.id }
+
+        movieInput.crew.stream()
+            .map{ v -> mapToEntity(movieEntity, personMap[v.personId], v) }
+            .forEach { crew -> movieEntity.crew.add(crew) }
+
+        movieInput.cast.stream()
+            .map{ v -> mapToEntity(movieEntity, personMap[v.personId], v) }
+            .forEach { cast -> movieEntity.crew.add(cast) }
+
+        return movieEntity
+    }
+
+    private fun mapToEntity(movieEntity: MovieEntity, personEntity: PersonEntity?, movieCrewInput: MovieCrewInput) : CrewJobEntity {
+        if(personEntity == null) {
+            throw PersonNotFoundException(movieCrewInput.personId)
+        }
+        return CrewJobEntity(
+            movie = movieEntity,
+            person = personEntity,
+            jobName = movieCrewInput.jobName,
+            sequence = movieCrewInput.sequence
+        )
+    }
+
+    private fun mapToEntity(movieEntity: MovieEntity, personEntity: PersonEntity?, movieCastInput: MovieCastInput) : CastJobEntity {
+        if(personEntity == null) {
+            throw PersonNotFoundException(movieCastInput.personId)
+        }
+        return CastJobEntity(
+            movie = movieEntity,
+            person = personEntity,
+            characterName = movieCastInput.characterName,
+            sequence = movieCastInput.sequence
         )
     }
 }

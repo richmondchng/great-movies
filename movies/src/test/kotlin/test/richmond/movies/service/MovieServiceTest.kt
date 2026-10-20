@@ -4,19 +4,27 @@ import java.math.BigDecimal
 import java.time.Instant
 import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import test.richmond.movies.data.entity.CastJobEntity
 import test.richmond.movies.data.entity.CrewJobEntity
 import test.richmond.movies.data.entity.MovieEntity
 import test.richmond.movies.data.entity.PersonEntity
 import test.richmond.movies.data.repository.MovieRepository
+import test.richmond.movies.data.repository.PersonRepository
+import test.richmond.movies.exception.PersonNotFoundException
+import test.richmond.movies.model.dto.MovieCastInput
+import test.richmond.movies.model.dto.MovieCrewInput
 import test.richmond.movies.model.dto.MovieInput
 
 @ExtendWith(MockitoExtension::class)
@@ -25,11 +33,14 @@ class MovieServiceTest {
     @Mock
     lateinit var movieRepository: MovieRepository
 
+    @Mock
+    lateinit var personRepository: PersonRepository
+
     private lateinit var movieService: MovieService
 
     @BeforeEach
     fun setUp() {
-        movieService = MovieService(movieRepository)
+        movieService = MovieService(movieRepository, personRepository)
     }
 
     @AfterEach
@@ -143,7 +154,30 @@ class MovieServiceTest {
     }
 
     @Test
+    fun `should throw exception when adding movie if person is not found`() {
+        whenever(personRepository.findAllById(any())).thenReturn(listOf())
+
+        val input = MovieInput(
+            title = "Movie A",
+            summary = "Movie A summary",
+            rating = "4.0",
+            releaseYear = 2020,
+            cast = listOf(),
+            crew = listOf(MovieCrewInput(2L, "Director", 2))
+        )
+
+        assertThatThrownBy {
+            movieService.addMovie(input)
+        }.isInstanceOf(PersonNotFoundException::class.java)
+            .hasMessage("Person not found with id: 2")
+    }
+
+    @Test
     fun `should add movie if id is 0`() {
+        val director = constructPerson(1L, "John", "F", "Director/Actor")
+        val actor1 = constructPerson(4L, "Robert", "B", "Actor")
+        whenever(personRepository.findAllById(any())).thenReturn(listOf(director, actor1))
+
         val movie = constructMovieEntity(
             id = 2L,
             title = "Movie A",
@@ -154,19 +188,46 @@ class MovieServiceTest {
         )
         whenever(movieRepository.save(any<MovieEntity>())).thenReturn(movie)
 
-        val input = MovieInput(id = 0,
+        val input = MovieInput(
             title = "Movie A",
             summary = "Movie A summary",
             rating = "4.0",
-            releaseYear = 2020)
-        val result = movieService.addMovie(input)
+            releaseYear = 2020,
+            cast = listOf(MovieCastInput(actor1.id, "Movie character", 1)),
+            crew = listOf(MovieCrewInput(director.id, "Director", 2))
+        )
 
+        val result = movieService.addMovie(input)
         assertThat(result).isNotNull
         assertThat(result.id).isEqualTo(2L)
-        assertThat(result.title).isEqualTo("Movie A")
-        assertThat(result.summary).isEqualTo("Movie A summary")
-        assertThat(result.rating).isEqualTo("4.0")
-        assertThat(result.releaseYear).isEqualTo(2020)
+
+        val movieEntityCaptor = argumentCaptor<MovieEntity>()
+        verify(movieRepository).save(movieEntityCaptor.capture())
+
+        val personIdCaptor = argumentCaptor<Iterable<Long>>()
+        verify(personRepository).findAllById(personIdCaptor.capture())
+        assertThat(personIdCaptor.firstValue).containsExactlyInAnyOrder(1L, 4L)
+
+        val movieEntity = movieEntityCaptor.firstValue
+        assertThat(movieEntity).isNotNull
+        assertThat(movieEntity.id).isEqualTo(0L)
+        assertThat(movieEntity.title).isEqualTo("Movie A")
+        assertThat(movieEntity.summary).isEqualTo("Movie A summary")
+        assertThat(movieEntity.rating).isEqualTo("4.0")
+        assertThat(movieEntity.releaseYear).isEqualTo(2020)
+
+        assertThat(movieEntity.crew).hasSize(2)
+        val iterator = movieEntity.crew.stream().sorted(Comparator.comparing { v -> v.sequence }).iterator()
+
+        val crew1 = assertInstanceOf(CastJobEntity::class.java, iterator.next())
+        assertThat(crew1.person.id).isEqualTo(4L)
+        assertThat(crew1.sequence).isEqualTo(1)
+        assertThat(crew1.characterName).isEqualTo("Movie character")
+
+        val crew2 = assertInstanceOf(CrewJobEntity::class.java, iterator.next())
+        assertThat(crew2.person.id).isEqualTo(1L)
+        assertThat(crew2.sequence).isEqualTo(2)
+        assertThat(crew2.jobName).isEqualTo("Director")
     }
 
     fun constructMovieEntity(id: Long,

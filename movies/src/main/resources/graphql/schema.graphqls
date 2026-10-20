@@ -41,4 +41,18 @@ input MovieInput {
     summary: String
     releaseYear: Int!
     rating: String!
+    cast: [MovieCastInput!]
+    crew: [MovieCrewInput!]
+}
+
+input MovieCastInput {
+    personId: Int!
+    characterName: String!
+    sequence: Int
+}
+
+input MovieCrewInput {
+    personId: Int!
+    jobName: String!
+    sequence: Int
 }
