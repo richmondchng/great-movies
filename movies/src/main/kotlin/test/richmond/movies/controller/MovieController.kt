@@ -14,7 +14,7 @@ class MovieController(
     private var movieService : MovieService
 ) {
 
-    private val logger = LoggerFactory.getLogger(MovieService::class.java)
+    private val logger = LoggerFactory.getLogger(MovieController::class.java)
 
     @QueryMapping(name = "movie")
     fun movie(@Argument id: Long) : MovieDTO? {

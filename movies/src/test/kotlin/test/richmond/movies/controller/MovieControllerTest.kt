@@ -3,6 +3,7 @@ package test.richmond.movies.controller
 import java.time.Instant
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.graphql.test.autoconfigure.GraphQlTest
@@ -23,6 +24,23 @@ class MovieControllerTest @Autowired constructor(
 
     @MockitoBean
     lateinit var movieService: MovieService
+
+    @Test
+    fun `should not return anything if movie id is invalid`() {
+        whenever(movieService.findMovieById(any())).thenReturn(null)
+
+        graphQlTester.document("""
+            query {
+                movie(id: 1) {
+                    id
+                    title
+                }
+            }""".trimIndent()).execute()
+            .path("movie")
+            .valueIsNull()
+
+        verify(movieService).findMovieById(1L)
+    }
 
     @Test
     fun `should return movie for movie id`() {
@@ -79,6 +97,8 @@ class MovieControllerTest @Autowired constructor(
                         }
                     ]
                 }""".trimIndent())
+
+        verify(movieService).findMovieById(1L)
     }
 
     @Test
@@ -96,6 +116,8 @@ class MovieControllerTest @Autowired constructor(
                 {
                     "title": "Test title"
                 }""".trimIndent())
+
+        verify(movieService).findMovieById(1L)
     }
 
     @Test
