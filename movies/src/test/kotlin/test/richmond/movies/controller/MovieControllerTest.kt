@@ -27,7 +27,7 @@ class MovieControllerTest @Autowired constructor(
 
     @Test
     fun `should not return anything if movie id is invalid`() {
-        whenever(movieService.findMovieById(any())).thenReturn(null)
+        whenever(movieService.getMovieById(any())).thenReturn(null)
 
         graphQlTester.document("""
             query {
@@ -39,12 +39,12 @@ class MovieControllerTest @Autowired constructor(
             .path("movie")
             .valueIsNull()
 
-        verify(movieService).findMovieById(1L)
+        verify(movieService).getMovieById(1L)
     }
 
     @Test
     fun `should return movie for movie id`() {
-        whenever(movieService.findMovieById(any())).thenReturn(constructMovieDTO())
+        whenever(movieService.getMovieById(any())).thenReturn(constructMovieDTO())
 
         graphQlTester.document("""
             query {
@@ -98,12 +98,12 @@ class MovieControllerTest @Autowired constructor(
                     ]
                 }""".trimIndent())
 
-        verify(movieService).findMovieById(1L)
+        verify(movieService).getMovieById(1L)
     }
 
     @Test
     fun `should return movie title only for movie id`() {
-        whenever(movieService.findMovieById(any())).thenReturn(constructMovieDTO())
+        whenever(movieService.getMovieById(any())).thenReturn(constructMovieDTO())
 
         graphQlTester.document("""
             query {
@@ -117,7 +117,7 @@ class MovieControllerTest @Autowired constructor(
                     "title": "Test title"
                 }""".trimIndent())
 
-        verify(movieService).findMovieById(1L)
+        verify(movieService).getMovieById(1L)
     }
 
     @Test

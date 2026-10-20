@@ -50,7 +50,7 @@ class MovieServiceTest {
     fun `should not return movie if id is invalid`() {
         whenever(movieRepository.findById(any())).thenReturn(Optional.empty())
 
-        val movie = movieService.findMovieById(1L)
+        val movie = movieService.getMovieById(1L)
 
         assertThat(movie).isNull()
     }
@@ -90,7 +90,7 @@ class MovieServiceTest {
 
         whenever(movieRepository.findById(any())).thenReturn(Optional.of(movie))
 
-        val movieDto = movieService.findMovieById(1L)
+        val movieDto = movieService.getMovieById(1L)
 
         assertThat(movieDto).isNotNull
         assertThat(movieDto?.id).isEqualTo(1L)

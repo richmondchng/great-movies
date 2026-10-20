@@ -25,7 +25,7 @@ class MovieService(
     val personRepository: PersonRepository
 ) {
 
-    fun findMovieById(id: Long): MovieDTO? {
+    fun getMovieById(id: Long): MovieDTO? {
         val movie = movieRepository.findById(id).orElse(null)
         if (movie != null) {
             return mapToDTO(movie)
