@@ -2,6 +2,8 @@
 
 # Query type
 type Query {
+    persons: [Person!]!
+    person(id: Int!): Person
     movie(id: Int!): Movie
 }
 
@@ -34,6 +36,13 @@ type Crew {
     lastName: String
     sequence: Int!
     jobName: String!
+}
+
+type Person {
+    id: ID!
+    firstName: String!
+    lastName: String
+    title: String
 }
 
 input MovieInput {
