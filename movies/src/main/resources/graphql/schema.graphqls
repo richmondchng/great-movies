@@ -18,6 +18,9 @@ type Movies {
     movies: [Movie!]!
     page: Int!
     pageSize: Int!
+    numberOfElements: Int!
+    totalElements: Int!
+    totalPages: Int!
 }
 
 type Movie {
@@ -50,6 +53,9 @@ type Persons {
     persons: [Person!]!
     page: Int!
     pageSize: Int!
+    numberOfElements: Int!
+    totalElements: Int!
+    totalPages: Int!
 }
 
 type Person {

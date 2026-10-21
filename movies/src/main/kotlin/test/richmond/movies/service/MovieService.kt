@@ -33,7 +33,10 @@ class MovieService(
         return MoviesDTO(
             movies = movies.stream().map { m -> mapToDTO(m) }.toList(),
             page = page,
-            pageSize = pageSize
+            pageSize = pageSize,
+            numberOfElements = movies.numberOfElements,
+            totalPages = movies.totalPages,
+            totalElements = movies.totalElements
         )
     }
 

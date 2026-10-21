@@ -25,7 +25,10 @@ class PersonService(
         return PersonsDTO(
             persons = persons.stream().map { p -> mapToDTO(p) }.toList(),
             page = page,
-            pageSize = pageSize
+            pageSize = pageSize,
+            numberOfElements = persons.numberOfElements,
+            totalPages = persons.totalPages,
+            totalElements = persons.totalElements
         )
     }
 
