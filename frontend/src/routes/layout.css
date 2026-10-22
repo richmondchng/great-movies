@@ -41,13 +41,11 @@ h2 {
 }
 
 /* Global link styles */
-a {
+a,
+a:visited,
+a:hover {
 	color: #2563eb;
 	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: underline;
 }
 
 /* Navigation bar */
@@ -139,5 +137,14 @@ a:hover {
 
 	.nav-link {
 		padding: 0.6rem 0.75rem;
+	}
+}
+
+@layer components {
+	.question-mark-placeholder {
+		@apply flex shrink-0 items-center justify-center rounded bg-gray-300 text-gray-500 shadow-sm;
+	}
+	.img-border {
+		@apply shrink-0 rounded object-cover shadow-sm;
 	}
 }
