@@ -5,3 +5,4 @@ Use of AI
 # Postgres SQL
 # JPA entities configuration
 # Frontend CSS
+# Frontend code snippets

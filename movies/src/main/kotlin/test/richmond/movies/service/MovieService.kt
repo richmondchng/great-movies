@@ -2,7 +2,10 @@ package test.richmond.movies.service
 
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import test.richmond.movies.data.entity.CastJobEntity
 import test.richmond.movies.data.entity.CrewJobEntity
@@ -28,8 +31,10 @@ class MovieService(
     val personRepository: PersonRepository
 ) {
 
+    private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
     fun getMovies(page: Int, pageSize: Int): MoviesDTO {
-        val movies = movieRepository.findAll(PageRequest.of(page, pageSize))
+        val movies = movieRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.ASC, "releaseDate")))
         return MoviesDTO(
             movies = movies.stream().map { m -> mapToDTO(m) }.toList(),
             page = page,
@@ -71,6 +76,7 @@ class MovieService(
             summary = movieEntity.summary,
             synopsis = movieEntity.synopsis,
             releaseYear = movieEntity.releaseYear,
+            releaseDate = movieEntity.releaseDate.format(dateTimeFormatter),
             rating = movieEntity.rating.setScale(1, RoundingMode.FLOOR).toPlainString(),
             createdAt = movieEntity.createdAt,
             cast = castList,
@@ -108,7 +114,8 @@ class MovieService(
             summary = movieInput.summary,
             synopsis = movieInput.summary,
             rating = BigDecimal(movieInput.rating),
-            releaseYear = movieInput.releaseYear
+            releaseYear = movieInput.releaseYear,
+            releaseDate = LocalDate.parse(movieInput.releaseDate)
         )
 
         val personIds = buildSet{

@@ -10,6 +10,7 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.math.BigDecimal
 import java.time.Instant
+import java.time.LocalDate
 import org.hibernate.annotations.CreationTimestamp
 
 @Entity
@@ -31,6 +32,9 @@ class MovieEntity (
 
     @Column(nullable = false, name = "release_year")
     var releaseYear: Int,
+
+    @Column(nullable = false, name = "release_date")
+    var releaseDate: LocalDate,
 
     @Column(nullable = false, name = "rating")
     var rating: BigDecimal = BigDecimal.ZERO,

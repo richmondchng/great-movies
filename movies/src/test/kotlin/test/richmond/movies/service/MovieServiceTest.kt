@@ -2,6 +2,7 @@ package test.richmond.movies.service
 
 import java.math.BigDecimal
 import java.time.Instant
+import java.time.LocalDate
 import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -152,6 +153,7 @@ class MovieServiceTest {
         assertThat(movieDto?.synopsis).isEqualTo("Movie A synopsis")
         assertThat(movieDto?.rating).isEqualTo("4.0")
         assertThat(movieDto?.releaseYear).isEqualTo(2020)
+        assertThat(movieDto?.releaseDate).isEqualTo("2020-10-01")
 
         assertThat(movieDto?.crew).hasSize(3)
 
@@ -215,6 +217,7 @@ class MovieServiceTest {
             summary = "Movie A summary",
             rating = "4.0",
             releaseYear = 2020,
+            releaseDate = "2020-10-01",
             cast = listOf(),
             crew = listOf(MovieCrewInput(2L, "Director", 2))
         )
@@ -246,6 +249,7 @@ class MovieServiceTest {
             summary = "Movie A summary",
             rating = "4.0",
             releaseYear = 2020,
+            releaseDate = "2020-10-01",
             cast = listOf(MovieCastInput(actor1.id, "Movie character", 1)),
             crew = listOf(MovieCrewInput(director.id, "Director", 2))
         )
@@ -268,6 +272,7 @@ class MovieServiceTest {
         assertThat(movieEntity.summary).isEqualTo("Movie A summary")
         assertThat(movieEntity.rating).isEqualTo("4.0")
         assertThat(movieEntity.releaseYear).isEqualTo(2020)
+        assertThat(movieEntity.releaseDate).isEqualTo(LocalDate.of(2020, 10, 1))
 
         assertThat(movieEntity.crew).hasSize(2)
         val iterator = movieEntity.crew.stream().sorted(Comparator.comparing { v -> v.sequence }).iterator()
@@ -297,6 +302,7 @@ class MovieServiceTest {
             synopsis = synopsis,
             rating = rating,
             releaseYear = releaseYear,
+            releaseDate = LocalDate.of(2020, 10, 1),
             createdAt = Instant.now())
     }
 

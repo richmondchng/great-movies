@@ -28,6 +28,7 @@ type Movie {
     title: String!
     summary: String
     releaseYear: Int!
+    releaseDate: String!
     rating: String!
     cast: [Cast!]!
     crew: [Crew!]!
