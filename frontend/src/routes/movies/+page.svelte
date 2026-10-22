@@ -17,7 +17,7 @@
   <div class="overflow-hidden rounded-lg border border-gray-200">
     {#each data.movies as movie, i (movie.id)}
       <a href={resolve('/movies/[movieId]', { movieId: String(movie.id) })}
-      class={`flex items-center gap-4 p-4 transition-colors hover:bg-blue-100 ${i % 2 === 0 ? 'bg-gray-50' : 'bg-gray-200'}`}
+        class={`flex items-center gap-4 p-4 transition-colors hover:bg-blue-100 ${i % 2 === 0 ? 'bg-gray-50' : 'bg-gray-200'}` }
       >
         <!-- Movie poster -->
         {#if movie.posterUrl}
