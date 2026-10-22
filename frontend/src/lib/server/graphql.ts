@@ -5,8 +5,6 @@ export async function graphql<T>(
   query: string,
   variables: Record<string, unknown> = {}
 ): Promise<T> {
-  console.log(`query param ${JSON.stringify({ query, variables })}`)
-
   const response = await fetchFn(MOVIES_GRAPHQL_URL, {
     method: 'POST',
     headers: {

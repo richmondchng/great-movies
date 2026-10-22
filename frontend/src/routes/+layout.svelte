@@ -12,8 +12,6 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-{page.url.pathname}
-
 <div class="site-wrapper">
 <nav class="navbar">
 	<a href={resolve('/')} class="navbar-brand">

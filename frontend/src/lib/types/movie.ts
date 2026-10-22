@@ -1,4 +1,4 @@
-export interface Movie {
+export interface MovieListItem {
     id: number;
     title: string;
     summary: string;
@@ -7,15 +7,22 @@ export interface Movie {
     rating: string | null;
 }
 
-export interface Movies {
-    movies: Movie[]
+export interface LatestMovieItem {
+    id: number;
+    title: string;
+    posterUrl: string | null;
+    releaseYear: number | null;
 }
 
-export interface MoviesResponse {
-    movies: Movies;
+export interface Movies<T> {
+    movies: T[]
     page: number;
     pageSize: number;
     numberOfElements: number;
     totalElements: number;
     totalPages: number;
+}
+
+export interface MoviesResponse<T> {
+    movies: Movies<T>;
 }
