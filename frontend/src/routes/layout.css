@@ -1,0 +1,143 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+/* Global styles */
+html,
+body {
+	margin: 0;
+	min-height: 100%;
+	font-family: Arial, sans-serif;
+	background-color: #f1f5f9;
+	color: #1e293b;
+}
+
+body {
+	min-height: 100vh;
+}
+
+/* Global website layout wrapper */
+.site-wrapper {
+	width: 100%;
+	max-width: 80rem;
+	min-height: 100vh;
+	margin: 0 auto;
+	padding: 24px;
+	box-sizing: border-box;
+	border-left: 1px solid #d1d5db;
+	border-right: 1px solid #d1d5db;
+	background-color: #ffffff;
+}
+
+/* Global heading styles */
+h1 {
+	font-size: 2rem;
+	font-weight: 700;
+}
+
+h2 {
+	font-size: 1.5rem;
+	font-weight: 600;
+}
+
+/* Global link styles */
+a {
+	color: #2563eb;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+/* Navigation bar */
+.navbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 2rem;
+	padding: 1rem 1.5rem;
+	background: #0f172a;
+	color: #f8fafc;
+	border-radius: 0.5rem;
+	margin-bottom: 2rem;
+}
+
+/* Brand / logo */
+.navbar-brand {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.65rem;
+	color: #f8fafc;
+	font-size: 1.35rem;
+	font-weight: 800;
+	letter-spacing: -0.04em;
+	white-space: nowrap;
+}
+
+.navbar-brand:hover {
+	text-decoration: none;
+}
+
+.brand-icon {
+	display: grid;
+	place-items: center;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 0.5rem;
+	background: #e11d48;
+	color: white;
+	font-size: 0.9rem;
+}
+
+.brand-highlight {
+	color: #fb7185;
+}
+
+/* Navigation links */
+.navbar-links {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.nav-link {
+	display: inline-block;
+	padding: 0.6rem 1rem;
+	border-radius: 0.4rem;
+	color: #cbd5e1;
+	font-size: 0.95rem;
+	font-weight: 500;
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease;
+}
+
+.nav-link:hover {
+	background: #1e293b;
+	color: #ffffff;
+	text-decoration: none;
+}
+
+.nav-link.active {
+	background: #e11d48;
+	color: #ffffff;
+}
+
+/* Responsive layout */
+@media (max-width: 480px) {
+	.navbar {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 1rem;
+		padding: 1rem;
+	}
+
+	.navbar-links {
+		flex-wrap: wrap;
+	}
+
+	.nav-link {
+		padding: 0.6rem 0.75rem;
+	}
+}
