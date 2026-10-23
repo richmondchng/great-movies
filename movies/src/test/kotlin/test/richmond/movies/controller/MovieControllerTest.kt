@@ -1,6 +1,5 @@
 package test.richmond.movies.controller
 
-import java.time.Instant
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
@@ -29,7 +28,7 @@ class MovieControllerTest @Autowired constructor(
 
     @Test
     fun `should return empty list if no movies`() {
-        whenever(movieService.getMovies(any(), any())).thenReturn(
+        whenever(movieService.getMovies(any(), any(),any(), any())).thenReturn(
             MoviesDTO(
                 movies = listOf(),
                 page = 0,
@@ -59,17 +58,17 @@ class MovieControllerTest @Autowired constructor(
                     "pageSize": 20
                 }""".trimIndent())
 
-        verify(movieService).getMovies(0, 20)
+        verify(movieService).getMovies(0, 20, "releaseDate", true)
     }
 
     @Test
     fun `should return list of movies`() {
-        whenever(movieService.getMovies(any(), any()))
+        whenever(movieService.getMovies(any(), any(), any(), any()))
             .thenReturn(
                 MoviesDTO(
                     movies = listOf(
-                        constructMovieDTO(id = 1L, title = "Movie 1"),
-                        constructMovieDTO(id = 2L, title = "Movie 2")
+                        constructMovieDTO(id = "c0e9d32c-146e-4478-84b7-e02c640c5c6b", title = "Movie 1"),
+                        constructMovieDTO(id = "53d902aa-d37c-4c55-ac6a-8759e24b3041", title = "Movie 2")
                     ),
                     page = 1,
                     pageSize = 10,
@@ -95,11 +94,11 @@ class MovieControllerTest @Autowired constructor(
                 {
                     "movies": [
                         {
-                            "id": "1",
+                            "id": "c0e9d32c-146e-4478-84b7-e02c640c5c6b",
                             "title": "Movie 1"
                         },
                         {
-                            "id": "2",
+                            "id": "53d902aa-d37c-4c55-ac6a-8759e24b3041",
                             "title": "Movie 2"
                         }
                     ],
@@ -107,7 +106,7 @@ class MovieControllerTest @Autowired constructor(
                     "pageSize": 10
                 }""".trimIndent())
 
-        verify(movieService).getMovies(1, 10)
+        verify(movieService).getMovies(1, 10, "releaseDate", true)
     }
 
     @Test
@@ -116,7 +115,7 @@ class MovieControllerTest @Autowired constructor(
 
         graphQlTester.document("""
             query {
-                movie(id: 1) {
+                movie(id: "2f251eae-09b2-4691-a350-009518995bce") {
                     id
                     title
                 }
@@ -124,16 +123,18 @@ class MovieControllerTest @Autowired constructor(
             .path("movie")
             .valueIsNull()
 
-        verify(movieService).getMovieById(1L)
+        verify(movieService).getMovieById("2f251eae-09b2-4691-a350-009518995bce")
     }
 
     @Test
     fun `should return movie for movie id`() {
-        whenever(movieService.getMovieById(any())).thenReturn(constructMovieDTO())
+        whenever(movieService.getMovieById(any())).thenReturn(constructMovieDTO(
+            id = "e60c085c-4ae6-4a62-96fe-4ffea2ab8b03"
+        ))
 
         graphQlTester.document("""
             query {
-                movie(id: 1) {
+                movie(id: "e60c085c-4ae6-4a62-96fe-4ffea2ab8b03") {
                     id
                     title
                     summary
@@ -158,14 +159,14 @@ class MovieControllerTest @Autowired constructor(
             .path("movie")
             .matchesJson("""
                 {
-                    "id": "1",
+                    "id": "e60c085c-4ae6-4a62-96fe-4ffea2ab8b03",
                     "title": "Test title",
                     "summary": "Test summary",
                     "releaseYear": 2026,
                     "rating": "5.0",
                     "cast": [
                         {
-                            "personId": "1",
+                            "personId": "d5171a9d-83a8-4695-9468-396b446b5d6d",
                             "firstName": "Peter",
                             "lastName": "P",
                             "sequence": 99,
@@ -174,7 +175,7 @@ class MovieControllerTest @Autowired constructor(
                     ],
                     "crew": [
                        {
-                            "personId": "2",
+                            "personId": "3435c7bf-6087-4779-9646-23229e22182a",
                             "firstName": "Norman",
                             "lastName": "O",
                             "sequence": 99,
@@ -183,16 +184,18 @@ class MovieControllerTest @Autowired constructor(
                     ]
                 }""".trimIndent())
 
-        verify(movieService).getMovieById(1L)
+        verify(movieService).getMovieById("e60c085c-4ae6-4a62-96fe-4ffea2ab8b03")
     }
 
     @Test
     fun `should return movie title only for movie id`() {
-        whenever(movieService.getMovieById(any())).thenReturn(constructMovieDTO())
+        whenever(movieService.getMovieById(any())).thenReturn(constructMovieDTO(
+            id = "f363b773-da4c-4a2d-8aa5-b77b66ffbf77"
+        ))
 
         graphQlTester.document("""
             query {
-                movie(id: 1) {
+                movie(id: "f363b773-da4c-4a2d-8aa5-b77b66ffbf77") {
                     title
                 }
             }""".trimIndent()).execute()
@@ -202,13 +205,13 @@ class MovieControllerTest @Autowired constructor(
                     "title": "Test title"
                 }""".trimIndent())
 
-        verify(movieService).getMovieById(1L)
+        verify(movieService).getMovieById("f363b773-da4c-4a2d-8aa5-b77b66ffbf77")
     }
 
     @Test
     fun `should return movie after add`() {
         whenever(movieService.addMovie(any())).thenReturn(constructMovieDTO(
-            id = 2L,
+            id = "093e0e4d-3f9e-4ceb-b116-60f1f89c3231",
             title = "Test title 2",
             summary = "Test summary 2",
             rating = "1.0",
@@ -221,15 +224,16 @@ class MovieControllerTest @Autowired constructor(
                     summary: "Test summary 2"
                     rating: "1.0"
                     releaseYear: 2026
+                    releaseDate: "2026-04-01"
                     cast: [
                         {
-                            personId: 1,
+                            personId: "d5171a9d-83a8-4695-9468-396b446b5d6d",
                             characterName: "Test Character"
                         }
                     ]
                     crew: [
                         {
-                            personId: 2,
+                            personId: "3435c7bf-6087-4779-9646-23229e22182a",
                             jobName: "Director"
                         }
                     ]
@@ -258,7 +262,7 @@ class MovieControllerTest @Autowired constructor(
             .path("addMovie")
             .matchesJson("""
                 {
-                    "id": "2",
+                    "id": "093e0e4d-3f9e-4ceb-b116-60f1f89c3231",
                     "title": "Test title 2",
                     "summary": "Test summary 2",
                     "rating": "1.0",
@@ -267,7 +271,7 @@ class MovieControllerTest @Autowired constructor(
                         {
                             "firstName": "Peter",
                             "lastName": "P",
-                            "personId": "1",
+                            "personId": "d5171a9d-83a8-4695-9468-396b446b5d6d",
                             "characterName": "Test Character",
                             "sequence": 99
                         }
@@ -277,14 +281,14 @@ class MovieControllerTest @Autowired constructor(
                             "firstName": "Norman",
                             "jobName": "Director",
                             "lastName": "O",
-                            "personId": "2",
+                            "personId": "3435c7bf-6087-4779-9646-23229e22182a",
                             "sequence": 99
                         }
                     ]
                 }""".trimIndent())
     }
 
-    private fun constructMovieDTO(id : Long = 1L,
+    private fun constructMovieDTO(id : String,
                                   title: String = "Test title",
                                   summary: String = "Test summary",
                                   rating: String = "5.0",
@@ -297,8 +301,18 @@ class MovieControllerTest @Autowired constructor(
             rating = rating,
             releaseYear = releaseYear,
             releaseDate = "2020-10-02",
-            cast = listOf(CastDTO(1L, "Peter", "P", 99, "Test Character", 1L)),
-            crew = listOf(CrewDTO(2L, "Norman", "O", 99, "Director", 2L))
+            cast = listOf(CastDTO("d5171a9d-83a8-4695-9468-396b446b5d6d",
+                "Peter",
+                "P",
+                99,
+                "Test Character",
+                "e7619389-746a-49c4-aacd-16dff98d1c29")),
+            crew = listOf(CrewDTO("3435c7bf-6087-4779-9646-23229e22182a",
+                "Norman",
+                "O",
+                99,
+                "Director",
+                "3d4e0114-a34b-49c7-93e5-346affe298d7"))
         )
     }
 }

@@ -25,7 +25,7 @@ class MovieController(
     }
 
     @QueryMapping(name = "movie")
-    fun movie(@Argument id: Long) : MovieDTO? {
+    fun movie(@Argument id: String) : MovieDTO? {
         logger.info("Getting movie by id $id")
         return movieService.getMovieById(id)
     }

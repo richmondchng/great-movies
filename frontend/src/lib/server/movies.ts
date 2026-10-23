@@ -1,4 +1,4 @@
-import type { Movies, LatestMovieItem, MovieListItem, MoviesResponse, MovieDetailsItem } from '#lib/types/movie.ts'
+import type { Movies, LatestMovieItem, MovieListItem, MoviesResponse, MovieDetailResponse, MovieDetailsItem } from '#lib/types/movie.ts'
 import { graphql } from './graphql';
 
 export async function getMovies(
@@ -17,6 +17,10 @@ export async function getMovies(
                             title
                             releaseYear
                             rating
+                            coverImageUrl {
+                                id
+                                imageUrl
+                            }
                         }
                         page
                         pageSize
@@ -46,6 +50,10 @@ export async function getLatestMovies(
                             title
                             releaseYear
                             rating
+                            coverImageUrl {
+                                id
+                                imageUrl
+                            }
                         }
                     }
                 }
@@ -61,13 +69,22 @@ export async function getMovie(
     id: number
 ): Promise<MovieDetailsItem> {
 
-    const data = await graphql<MovieDetailsItem>(
+    const data = await graphql<MovieDetailResponse>(
             fetchFn,
             `
                 query GetMovies($id: Int!) {
                     movie(id: $id) {
                         id
                         title
+                        summary
+                        coverImageUrl {
+                            id
+                            imageUrl
+                        }
+                        images {
+                            id
+                            imageUrl
+                        }
                         releaseYear
                         releaseDate
                         rating
@@ -77,6 +94,10 @@ export async function getMovie(
                             lastName
                             sequence
                             characterName
+                            coverImageUrl {
+                                id
+                                imageUrl
+                            }
                         }
                         crew {
                             personId
@@ -84,6 +105,10 @@ export async function getMovie(
                             lastName
                             sequence
                             jobName
+                            coverImageUrl {
+                                id
+                                imageUrl
+                            }
                         }
                     }
                 }
@@ -91,5 +116,5 @@ export async function getMovie(
             { id: id }
         );
     
-    return data
+    return data.movie
 }

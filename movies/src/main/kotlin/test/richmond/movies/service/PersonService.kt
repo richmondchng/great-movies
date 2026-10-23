@@ -1,5 +1,6 @@
 package test.richmond.movies.service
 
+import java.util.UUID
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import test.richmond.movies.data.entity.CastJobEntity
@@ -32,8 +33,9 @@ class PersonService(
         )
     }
 
-    fun getPersonById(id: Long) : PersonDTO? {
-        val personEntity = personRepository.findById(id)
+    fun getPersonById(id: String) : PersonDTO? {
+        val uuid = UUID.fromString(id);
+        val personEntity = personRepository.findById(uuid)
         if(personEntity.isPresent) {
             return mapToDTO(personEntity.get())
         }
@@ -59,7 +61,7 @@ class PersonService(
             }
 
         return PersonDTO(
-            id = person.id,
+            id = person.id.toString(),
             firstName = person.firstName,
             lastName = person.lastName,
             title = person.title,
@@ -78,9 +80,9 @@ class PersonService(
 
     private fun mapToDTO(crewJobEntity: CrewJobEntity) : WorkedOn {
         return WorkedOn(
-            jobId = crewJobEntity.id,
+            jobId = crewJobEntity.id.toString(),
             jobName = crewJobEntity.jobName,
-            movieId = crewJobEntity.movie.id,
+            movieId = crewJobEntity.movie.id.toString(),
             movieName = crewJobEntity.movie.title,
             releaseYear = crewJobEntity.movie.releaseYear
         )
@@ -88,9 +90,9 @@ class PersonService(
 
     private fun mapToDTO(castJobEntity: CastJobEntity) : ActedIn {
         return ActedIn(
-            jobId = castJobEntity.id,
+            jobId = castJobEntity.id.toString(),
             characterName = castJobEntity.characterName,
-            movieId = castJobEntity.movie.id,
+            movieId = castJobEntity.movie.id.toString(),
             movieName = castJobEntity.movie.title,
             releaseYear = castJobEntity.movie.releaseYear
         )

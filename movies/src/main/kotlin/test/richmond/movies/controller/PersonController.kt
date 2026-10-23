@@ -23,7 +23,7 @@ class PersonController(
     }
 
     @QueryMapping(name = "person")
-    fun person(@Argument id: Long) : PersonDTO? {
+    fun person(@Argument id: String) : PersonDTO? {
         logger.info("Get person by id $id")
         return personService.getPersonById(id)
     }

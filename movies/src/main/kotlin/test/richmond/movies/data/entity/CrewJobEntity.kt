@@ -5,6 +5,7 @@ import jakarta.persistence.DiscriminatorValue
 import jakarta.persistence.Entity
 import jakarta.persistence.PrimaryKeyJoinColumn
 import jakarta.persistence.Table
+import java.util.UUID
 
 @Entity
 @Table(name = "job_crew")
@@ -15,7 +16,7 @@ class CrewJobEntity(
 
     person: PersonEntity,
 
-    id: Long = 0L,
+    id: UUID,
 
     @Column(name = "job_name", nullable = false)
     var jobName: String,

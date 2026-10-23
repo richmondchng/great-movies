@@ -5,6 +5,7 @@ import jakarta.persistence.DiscriminatorValue
 import jakarta.persistence.Entity
 import jakarta.persistence.PrimaryKeyJoinColumn
 import jakarta.persistence.Table
+import java.util.UUID
 
 @Entity
 @Table(name = "job_cast")
@@ -18,7 +19,7 @@ class CastJobEntity(
     @Column(name = "character_name", nullable = false)
     var characterName: String,
 
-    id: Long = 0L,
+    id: UUID,
 
     sequence : Int = 99
 ) : JobEntity (

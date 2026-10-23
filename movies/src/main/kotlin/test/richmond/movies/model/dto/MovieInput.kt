@@ -11,13 +11,13 @@ data class MovieInput(
 )
 
 data class MovieCastInput(
-    val personId: Long,
+    val personId: String,
     val characterName: String,
     val sequence: Int = 99
 )
 
 data class MovieCrewInput(
-    val personId: Long,
+    val personId: String,
     val jobName: String,
     val sequence: Int = 99
 )

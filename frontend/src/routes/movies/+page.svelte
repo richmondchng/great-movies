@@ -96,9 +96,9 @@
         class={`flex items-center gap-4 p-4 transition-colors hover:bg-blue-100 ${i % 2 === 0 ? 'bg-gray-50' : 'bg-gray-200'}` }
       >
         <!-- Movie poster -->
-        {#if movie.posterUrl}
+        {#if movie.coverImageUrl}
           <img
-            src={movie.posterUrl}
+            src={movie.coverImageUrl.url}
             alt={`${movie.title} poster`}
             class="img-border h-28 w-20"
           />
