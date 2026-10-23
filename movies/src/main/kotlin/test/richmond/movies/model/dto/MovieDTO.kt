@@ -10,6 +10,8 @@ data class MovieDTO(
     val rating: String = "0.0",
     val releaseYear: Int = 0,
     val releaseDate: String = "",
+    val coverImageUrl: ImageDTO? = null,
+    val images: List<ImageDTO> = listOf(),
     val createdAt: Instant = Instant.now(),
     val cast: List<CastDTO> = listOf(),
     val crew: List<CrewDTO> = listOf()

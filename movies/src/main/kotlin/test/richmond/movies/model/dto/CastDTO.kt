@@ -6,5 +6,6 @@ data class CastDTO(
     val lastName: String?,
     val sequence: Int = 99,
     val characterName: String,
-    val jobId: Long
+    val jobId: Long,
+    val coverImageUrl: ImageDTO? = null
 )

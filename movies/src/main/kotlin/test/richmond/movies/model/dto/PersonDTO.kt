@@ -5,6 +5,7 @@ data class PersonDTO(
     val firstName: String,
     val lastName: String?,
     val title: String?,
+    val coverImageUrl: ImageDTO? = null,
     val workedOn: List<WorkedOn> = listOf(),
     val actedIn: List<ActedIn> = listOf()
 )

@@ -30,8 +30,16 @@ type Movie {
     releaseYear: Int!
     releaseDate: String!
     rating: String!
+    coverImageUrl: Image,
+    images: [Image!]!
     cast: [Cast!]!
     crew: [Crew!]!
+}
+
+type Image {
+    imageId: Int!
+    imageUrl: String!
+    imageAlt: String
 }
 
 type Cast {
@@ -40,6 +48,7 @@ type Cast {
     lastName: String
     sequence: Int!
     characterName: String!
+    coverImageUrl: Image
 }
 
 type Crew {
@@ -48,6 +57,7 @@ type Crew {
     lastName: String
     sequence: Int!
     jobName: String!
+    coverImageUrl: Image
 }
 
 type Persons {
@@ -64,6 +74,7 @@ type Person {
     firstName: String!
     lastName: String
     title: String
+    coverImageUrl: Image
     workedOn: [WorkedOn!]!
     actedIn: [ActedIn!]!
 }
@@ -88,6 +99,7 @@ input MovieInput {
     title: String!
     summary: String
     releaseYear: Int!
+    releaseDate: String!
     rating: String!
     cast: [MovieCastInput!]
     crew: [MovieCrewInput!]

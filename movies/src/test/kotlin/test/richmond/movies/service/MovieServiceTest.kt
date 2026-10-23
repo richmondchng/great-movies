@@ -55,7 +55,7 @@ class MovieServiceTest {
         val pageable = PageRequest.of(0, 10)
         whenever(movieRepository.findAll(any<Pageable>())).thenReturn(PageImpl(listOf(), pageable, 0))
 
-        val result = movieService.getMovies(0, 10)
+        val result = movieService.getMovies(0, 10, "releasedDate", true)
 
         assertThat(result.movies).isEmpty()
         assertThat(result.page).isEqualTo(0)
@@ -87,7 +87,7 @@ class MovieServiceTest {
                 0)
             )
 
-        val result = movieService.getMovies(0, 10)
+        val result = movieService.getMovies(0, 10, "releasedDate", true)
 
         assertThat(result.page).isEqualTo(0)
         assertThat(result.pageSize).isEqualTo(10)

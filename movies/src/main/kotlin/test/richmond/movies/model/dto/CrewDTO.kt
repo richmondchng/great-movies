@@ -6,5 +6,6 @@ data class CrewDTO(
     val lastName: String?,
     val sequence: Int = 99,
     val jobName: String,
-    val jobId: Long
+    val jobId: Long,
+    val coverImageUrl: ImageDTO? = null
 )

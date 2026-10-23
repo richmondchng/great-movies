@@ -29,7 +29,7 @@ class MovieControllerTest @Autowired constructor(
 
     @Test
     fun `should return empty list if no movies`() {
-        whenever(movieService.getMovies(any(), any())).thenReturn(
+        whenever(movieService.getMovies(any(), any(),any(), any())).thenReturn(
             MoviesDTO(
                 movies = listOf(),
                 page = 0,
@@ -59,12 +59,12 @@ class MovieControllerTest @Autowired constructor(
                     "pageSize": 20
                 }""".trimIndent())
 
-        verify(movieService).getMovies(0, 20)
+        verify(movieService).getMovies(0, 20, "releaseDate", true)
     }
 
     @Test
     fun `should return list of movies`() {
-        whenever(movieService.getMovies(any(), any()))
+        whenever(movieService.getMovies(any(), any(), any(), any()))
             .thenReturn(
                 MoviesDTO(
                     movies = listOf(
@@ -107,7 +107,7 @@ class MovieControllerTest @Autowired constructor(
                     "pageSize": 10
                 }""".trimIndent())
 
-        verify(movieService).getMovies(1, 10)
+        verify(movieService).getMovies(1, 10, "releaseDate", true)
     }
 
     @Test
@@ -221,6 +221,7 @@ class MovieControllerTest @Autowired constructor(
                     summary: "Test summary 2"
                     rating: "1.0"
                     releaseYear: 2026
+                    releaseDate: "2026-04-01"
                     cast: [
                         {
                             personId: 1,
