@@ -5,6 +5,7 @@ import java.math.RoundingMode
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.UUID
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -74,8 +75,9 @@ class MovieService(
         )
     }
 
-    fun getMovieById(id: Long): MovieDTO? {
-        val movie = movieRepository.findById(id).orElse(null)
+    fun getMovieById(id: String): MovieDTO? {
+        val uuid = UUID.fromString(id);
+        val movie = movieRepository.findById(uuid).orElse(null)
         if (movie != null) {
             return mapToDTO(movie)
         }
@@ -100,7 +102,7 @@ class MovieService(
                 }
             }
         return MovieDTO(
-            id = movieEntity.id,
+            id = movieEntity.id.toString(),
             title = movieEntity.title,
             summary = movieEntity.summary,
             synopsis = movieEntity.synopsis,
@@ -115,30 +117,29 @@ class MovieService(
 
     private fun mapToDTO(castEntity: CastJobEntity): CastDTO {
         return CastDTO(
-            personId = castEntity.person.id,
+            personId = castEntity.person.id.toString(),
             firstName = castEntity.person.firstName,
             lastName = castEntity.person.lastName,
             sequence = castEntity.sequence,
             characterName = castEntity.characterName,
-            jobId = castEntity.id
+            jobId = castEntity.id.toString()
         )
     }
 
     private fun mapToDTO(crewEntity: CrewJobEntity): CrewDTO {
         return CrewDTO(
-            personId = crewEntity.person.id,
+            personId = crewEntity.person.id.toString(),
             firstName = crewEntity.person.firstName,
             lastName = crewEntity.person.lastName,
             sequence = crewEntity.sequence,
             jobName = crewEntity.jobName,
-            jobId = crewEntity.id
+            jobId = crewEntity.id.toString()
         )
     }
 
     private fun mapToEntity(movieInput: MovieInput) : MovieEntity {
 
         val movieEntity = MovieEntity(
-            id = 0L,
             title = movieInput.title,
             summary = movieInput.summary,
             synopsis = movieInput.summary,
@@ -148,18 +149,18 @@ class MovieService(
         )
 
         val personIds = buildSet{
-            movieInput.crew.forEach { add(it.personId) }
-            movieInput.cast.forEach { add(it.personId) }
+            movieInput.crew.forEach { add(UUID.fromString(it.personId)) }
+            movieInput.cast.forEach { add(UUID.fromString(it.personId)) }
         }
 
         val personMap = personRepository.findAllById(personIds).associateBy { it.id }
 
         movieInput.crew.stream()
-            .map{ v -> mapToEntity(movieEntity, personMap[v.personId], v) }
+            .map{ v -> mapToEntity(movieEntity, personMap[UUID.fromString(v.personId)], v) }
             .forEach { crew -> movieEntity.crew.add(crew) }
 
         movieInput.cast.stream()
-            .map{ v -> mapToEntity(movieEntity, personMap[v.personId], v) }
+            .map{ v -> mapToEntity(movieEntity, personMap[UUID.fromString(v.personId)], v) }
             .forEach { cast -> movieEntity.crew.add(cast) }
 
         return movieEntity
@@ -170,6 +171,7 @@ class MovieService(
             throw PersonNotFoundException(movieCrewInput.personId)
         }
         return CrewJobEntity(
+            id = UUID.randomUUID(),
             movie = movieEntity,
             person = personEntity,
             jobName = movieCrewInput.jobName,
@@ -182,6 +184,7 @@ class MovieService(
             throw PersonNotFoundException(movieCastInput.personId)
         }
         return CastJobEntity(
+            id = UUID.randomUUID(),
             movie = movieEntity,
             person = personEntity,
             characterName = movieCastInput.characterName,

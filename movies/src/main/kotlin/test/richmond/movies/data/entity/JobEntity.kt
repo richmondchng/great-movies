@@ -12,6 +12,7 @@ import jakarta.persistence.InheritanceType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import java.util.UUID
 
 @Entity
 @Table(name = "job")
@@ -19,8 +20,8 @@ import jakarta.persistence.Table
 @DiscriminatorColumn(name = "job_type")
 abstract class JobEntity (
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L,
+    @GeneratedValue(strategy = GenerationType.UUID)
+    val id: UUID? = null,
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "movie_id", nullable = false)

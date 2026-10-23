@@ -8,6 +8,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.time.Instant
+import java.util.UUID
 import org.hibernate.annotations.CreationTimestamp
 
 @Entity
@@ -15,8 +16,8 @@ import org.hibernate.annotations.CreationTimestamp
 class PersonEntity (
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L,
+    @GeneratedValue(strategy = GenerationType.UUID)
+    val id: UUID? = null,
 
     @Column(nullable = false, name = "first_name")
     val firstName: String = "",

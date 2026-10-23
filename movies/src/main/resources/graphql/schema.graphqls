@@ -3,9 +3,9 @@
 # Query type
 type Query {
     persons(page: Int = 0, pageSize: Int = 20): Persons!
-    person(id: Int!): Person
+    person(id: String!): Person
     movies(page: Int = 0, pageSize: Int = 20, sortBy: String = "releaseDate", sortAsc: Boolean = true): Movies!
-    movie(id: Int!): Movie
+    movie(id: String!): Movie
 }
 
 type Mutation {
@@ -80,17 +80,17 @@ type Person {
 }
 
 type WorkedOn {
-    jobId: Int!
+    jobId: String!
     jobName: String!
-    movieId: Int!
+    movieId: String!
     movieName: String!
     releaseYear: Int!
 }
 
 type ActedIn {
-    jobId: Int!
+    jobId: String!
     characterName: String!
-    movieId: Int!
+    movieId: String!
     movieName: String!
     releaseYear: Int!
 }
@@ -106,13 +106,13 @@ input MovieInput {
 }
 
 input MovieCastInput {
-    personId: Int!
+    personId: String!
     characterName: String!
     sequence: Int
 }
 
 input MovieCrewInput {
-    personId: Int!
+    personId: String!
     jobName: String!
     sequence: Int
 }

@@ -11,6 +11,7 @@ import jakarta.persistence.Table
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
+import java.util.UUID
 import org.hibernate.annotations.CreationTimestamp
 
 @Entity
@@ -18,8 +19,8 @@ import org.hibernate.annotations.CreationTimestamp
 class MovieEntity (
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0L,
+    @GeneratedValue(strategy = GenerationType.UUID)
+    val id: UUID? = null,
 
     @Column(nullable = false, name = "title")
     var title: String = "",

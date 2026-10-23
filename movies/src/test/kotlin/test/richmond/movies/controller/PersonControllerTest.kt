@@ -30,7 +30,7 @@ class PersonControllerTest @Autowired constructor(
 
         graphQlTester.document("""
             query {
-                person(id: 1) {
+                person(id: "c0e9d32c-146e-4478-84b7-e02c640c5c6b") {
                     id
                     firstName
                 }
@@ -38,30 +38,30 @@ class PersonControllerTest @Autowired constructor(
             .path("person")
             .valueIsNull()
 
-        verify(personService).getPersonById(1)
+        verify(personService).getPersonById("c0e9d32c-146e-4478-84b7-e02c640c5c6b")
     }
 
     @Test
     fun `should return person if person id is valid`() {
         val person = PersonDTO(
-            id = 1L,
+            id = "c0e9d32c-146e-4478-84b7-e02c640c5c6b",
             firstName = "John",
             lastName = "Smith",
             title = "Superstar",
             workedOn = listOf(
                 WorkedOn(
-                    jobId = 11L,
+                    jobId = "e60c085c-4ae6-4a62-96fe-4ffea2ab8b03",
                     jobName = "Director",
-                    movieId = 21L,
+                    movieId = "da3bb7e2-738f-43db-a8de-70f9a2ff4eb5",
                     movieName = "Movie A",
                     releaseYear = 2021
                 )
             ),
             actedIn = listOf(
                 ActedIn(
-                    jobId = 12L,
+                    jobId = "093e0e4d-3f9e-4ceb-b116-60f1f89c3231",
                     characterName = "Passer-by",
-                    movieId = 21L,
+                    movieId = "da3bb7e2-738f-43db-a8de-70f9a2ff4eb5",
                     movieName = "Movie A",
                     releaseYear = 2021
                 )
@@ -71,7 +71,7 @@ class PersonControllerTest @Autowired constructor(
 
         graphQlTester.document("""
             query {
-                person(id: 1) {
+                person(id: "c0e9d32c-146e-4478-84b7-e02c640c5c6b") {
                     id
                     firstName
                     lastName
@@ -95,37 +95,37 @@ class PersonControllerTest @Autowired constructor(
             .path("person")
             .matchesJson("""
                 {
-                    "id": "1",
+                    "id": "c0e9d32c-146e-4478-84b7-e02c640c5c6b",
                     "firstName": "John",
                     "lastName": "Smith",
                     "title": "Superstar",
                     "workedOn": [
                         {
-                            "jobId": 11,
+                            "jobId": "e60c085c-4ae6-4a62-96fe-4ffea2ab8b03",
                             "jobName": "Director",
-                            "movieId": 21,
+                            "movieId": "da3bb7e2-738f-43db-a8de-70f9a2ff4eb5",
                             "movieName": "Movie A",
                             "releaseYear": 2021
                         }
                     ],
                     "actedIn": [
                         {
-                            "jobId": 12,
+                            "jobId": "093e0e4d-3f9e-4ceb-b116-60f1f89c3231",
                             "characterName": "Passer-by",
-                            "movieId": 21,
+                            "movieId": "da3bb7e2-738f-43db-a8de-70f9a2ff4eb5",
                             "movieName": "Movie A",
                             "releaseYear": 2021
                         }
                     ]
                 }""".trimIndent())
 
-        verify(personService).getPersonById(1)
+        verify(personService).getPersonById("c0e9d32c-146e-4478-84b7-e02c640c5c6b")
     }
 
     @Test
     fun `should only return person last name if person id is valid`() {
         val person = PersonDTO(
-            id = 1L,
+            id = "c0e9d32c-146e-4478-84b7-e02c640c5c6b",
             firstName = "John",
             lastName = "Smith",
             title = "Superstar"
@@ -134,7 +134,7 @@ class PersonControllerTest @Autowired constructor(
 
         graphQlTester.document("""
             query {
-                person(id: 1) {
+                person(id: "c0e9d32c-146e-4478-84b7-e02c640c5c6b") {
                     lastName
                 }
             }""".trimIndent()).execute()
@@ -144,7 +144,7 @@ class PersonControllerTest @Autowired constructor(
                     "lastName": "Smith"
                 }""".trimIndent())
 
-        verify(personService).getPersonById(1)
+        verify(personService).getPersonById("c0e9d32c-146e-4478-84b7-e02c640c5c6b")
     }
 
     @Test
@@ -187,13 +187,13 @@ class PersonControllerTest @Autowired constructor(
     @Test
     fun `should return list of persons`() {
         val person1 = PersonDTO(
-            id = 1L,
+            id = "c0e9d32c-146e-4478-84b7-e02c640c5c6b",
             firstName = "John",
             lastName = "Smith",
             title = "Superstar"
         )
         val person2 = PersonDTO(
-            id = 2L,
+            id = "3d4e0114-a34b-49c7-93e5-346affe298d7",
             firstName = "Jane",
             lastName = "Smith",
             title = "Director"
@@ -227,13 +227,13 @@ class PersonControllerTest @Autowired constructor(
                 {
                     "persons": [
                         {
-                            "id": "1",
+                            "id": "c0e9d32c-146e-4478-84b7-e02c640c5c6b",
                             "firstName": "John",
                             "lastName": "Smith",
                             "title": "Superstar"
                         },
                         {
-                            "id": "2",
+                            "id": "3d4e0114-a34b-49c7-93e5-346affe298d7",
                             "firstName": "Jane",
                             "lastName": "Smith",
                             "title": "Director"
@@ -250,7 +250,7 @@ class PersonControllerTest @Autowired constructor(
     fun `should return person after add`() {
         whenever(personService.addPerson(any())).thenReturn(
             PersonDTO(
-                id = 1L,
+                id = "3d4e0114-a34b-49c7-93e5-346affe298d7",
                 firstName = "John",
                 lastName = "Smith",
                 title = "Superstar"
@@ -273,7 +273,7 @@ class PersonControllerTest @Autowired constructor(
             .path("addPerson")
             .matchesJson("""
                 {
-                    "id": "1",
+                    "id": "3d4e0114-a34b-49c7-93e5-346affe298d7",
                     "firstName": "John",
                     "lastName": "Smith",
                     "title": "Superstar"

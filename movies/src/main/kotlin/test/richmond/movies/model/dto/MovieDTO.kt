@@ -3,7 +3,7 @@ package test.richmond.movies.model.dto
 import java.time.Instant
 
 data class MovieDTO(
-    val id: Long = 0L,
+    val id: String,
     val title: String = "",
     val summary: String? = "",
     val synopsis: String? = "",
