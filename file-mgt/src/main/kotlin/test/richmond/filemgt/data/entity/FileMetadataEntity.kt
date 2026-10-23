@@ -10,11 +10,10 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import java.time.Instant
-import java.time.OffsetDateTime
 
 @Entity
 @Table(name = "file_upload_items")
-class FileUploadItemEntity(
+class FileMetadataEntity(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +21,7 @@ class FileUploadItemEntity(
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "file_upload_id", nullable = false)
-    val fileUpload: FileUploadEntity,
+    val fileUpload: FileGroupEntity,
 
     @Column(name = "file_name", nullable = false, length = 255)
     val fileName: String,

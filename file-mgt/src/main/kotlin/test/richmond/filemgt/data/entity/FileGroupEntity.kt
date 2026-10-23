@@ -16,7 +16,7 @@ import test.richmond.filemgt.model.ArtifactType
 
 @Entity
 @Table(name = "file_upload")
-class FileUploadEntity(
+class FileGroupEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
@@ -40,6 +40,6 @@ class FileUploadEntity(
         cascade = [CascadeType.ALL],
         orphanRemoval = true
     )
-    val items: MutableList<FileUploadItemEntity> = mutableListOf()
+    val items: MutableList<FileMetadataEntity> = mutableListOf()
 
 )
