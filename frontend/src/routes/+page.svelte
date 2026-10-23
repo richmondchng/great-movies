@@ -23,9 +23,9 @@
         {#each data.latestMovies as movie (movie.id)}
             <a href={resolve('/movies/[movieId]', { movieId: String(movie.id) })} class="movie-card interactive-card">
                 <div class="poster-container">
-                    {#if movie.posterUrl}
+                    {#if movie.coverImageUrl}
                         <img
-                            src={movie.posterUrl}
+                            src={movie.coverImageUrl.url}
                             alt={`${movie.title} movie poster`}
                             class="movie-poster"
                             loading="lazy"
