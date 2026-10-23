@@ -25,7 +25,7 @@ class FileMetadataEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "category")
-    val category: FileCategory = FileCategory.COVER_IMAGE,
+    val category: FileCategory = FileCategory.COVER,
 
     @Column(name = "original_file_name", nullable = false, length = 100)
     val originalFileName: String,
