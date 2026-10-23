@@ -41,11 +41,14 @@ class MovieServiceTest {
     @Mock
     lateinit var personRepository: PersonRepository
 
+    @Mock
+    lateinit var galleryService: GalleryService
+
     private lateinit var movieService: MovieService
 
     @BeforeEach
     fun setUp() {
-        movieService = MovieService(movieRepository, personRepository)
+        movieService = MovieService(movieRepository, personRepository, galleryService)
     }
 
     @AfterEach
@@ -270,7 +273,7 @@ class MovieServiceTest {
 
         val movieEntity = movieEntityCaptor.firstValue
         assertThat(movieEntity).isNotNull
-        assertThat(movieEntity.id).isNotNull
+        assertThat(movieEntity.id).isNull()
         assertThat(movieEntity.title).isEqualTo("Movie A")
         assertThat(movieEntity.summary).isEqualTo("Movie A summary")
         assertThat(movieEntity.rating).isEqualTo("4.0")

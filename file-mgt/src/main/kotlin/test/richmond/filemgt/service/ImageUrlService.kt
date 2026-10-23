@@ -1,6 +1,8 @@
 package test.richmond.filemgt.service
 
 import io.grpc.stub.StreamObserver
+import java.util.UUID
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.grpc.server.service.GrpcService
 import test.richmond.filemgt.data.entity.FileMetadataEntity
@@ -19,32 +21,42 @@ class ImageUrlService(
     val fileMetadataRepository: FileMetadataRepository
 ) : FileServiceGrpc.FileServiceImplBase()  {
 
+    private val logger = LoggerFactory.getLogger(ImageUrlService::class.java)
+
     override fun getImages(
         request: GetImagesRequest?,
         responseObserver: StreamObserver<GetImagesForOwnersResponse?>?
     ) {
+        val linkedIdList: List<UUID> = request?.ownersList?.map{ owner -> UUID.fromString(owner.ownerId)}?.toList() ?: listOf()
 
-        val linkedIdList: List<String> = request?.ownersList?.map{ owner -> owner.ownerId}?.toList() ?: listOf()
+        logger.info("Get images for ${linkedIdList.size} owners $linkedIdList")
 
-        if(linkedIdList.isNotEmpty()) {
-            val images = fileMetadataRepository.findAllByLinkedIdIn(linkedIdList)
+        try {
+            val allImages: List<Image>
+            if (linkedIdList.isNotEmpty()) {
+                val images = fileMetadataRepository.findAllByLinkedIdIn(linkedIdList)
 
-            val allImages = images.map { imageMetadata ->
-                Image.newBuilder()
-                    .setOwnerId(imageMetadata.linkedId.toString())
-                    .setImageType(getImageType(imageMetadata.category))
-                    .setImageId(imageMetadata.id.toString())
-                    .setFileUrl(getImageUrl(imageMetadata))
-                    .build()
-            }.toList()
-
+                allImages = images.map { imageMetadata ->
+                    Image.newBuilder()
+                        .setOwnerId(imageMetadata.linkedId.toString())
+                        .setImageType(getImageType(imageMetadata.category))
+                        .setImageId(imageMetadata.id.toString())
+                        .setFileUrl(getImageUrl(imageMetadata))
+                        .build()
+                }.toList()
+            } else {
+                allImages = emptyList()
+            }
+            logger.info("Returning ${allImages.size} images")
             val response = GetImagesForOwnersResponse.newBuilder()
                 .addAllImages(allImages)
                 .build()
 
             responseObserver?.onNext(response)
+            responseObserver?.onCompleted()
+        } catch (e: Exception) {
+            logger.error("Error during getting images", e)
         }
-        responseObserver?.onCompleted()
     }
 
     private fun getImageUrl(fileMetadata: FileMetadataEntity) : String {

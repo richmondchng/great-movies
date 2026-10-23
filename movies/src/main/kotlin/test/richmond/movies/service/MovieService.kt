@@ -6,6 +6,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
+import java.util.stream.Collectors
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -19,6 +20,7 @@ import test.richmond.movies.data.repository.PersonRepository
 import test.richmond.movies.exception.PersonNotFoundException
 import test.richmond.movies.model.dto.CastDTO
 import test.richmond.movies.model.dto.CrewDTO
+import test.richmond.movies.model.dto.ImageDTO
 import test.richmond.movies.model.dto.MovieCastInput
 import test.richmond.movies.model.dto.MovieCrewInput
 import test.richmond.movies.model.dto.MovieDTO
@@ -30,7 +32,8 @@ import kotlin.Long
 @Service
 class MovieService(
     val movieRepository: MovieRepository,
-    val personRepository: PersonRepository
+    val personRepository: PersonRepository,
+    val galleryService: GalleryService
 ) {
 
     private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -65,8 +68,10 @@ class MovieService(
             sortDirection,
             SortColumn.getColumnName(sortBy)))
 
+        val galleryMap = getGalleryMap(movies.content)
+
         return MoviesDTO(
-            movies = movies.stream().map { m -> mapToDTO(m) }.toList(),
+            movies = movies.stream().map { m -> mapToDTO(m, galleryMap) }.toList(),
             page = page,
             pageSize = pageSize,
             numberOfElements = movies.numberOfElements,
@@ -79,17 +84,27 @@ class MovieService(
         val uuid = UUID.fromString(id);
         val movie = movieRepository.findById(uuid).orElse(null)
         if (movie != null) {
-            return mapToDTO(movie)
+            val galleryMap = getGalleryMap(listOf(movie))
+            return mapToDTO(movie, galleryMap)
         }
         return null
     }
 
     fun addMovie(movie: MovieInput): MovieDTO {
         val result = movieRepository.save(mapToEntity(movie))
-        return mapToDTO(result)
+        val galleryMap = getGalleryMap(listOf(result))
+        return mapToDTO(result, galleryMap)
     }
 
-    private fun mapToDTO(movieEntity: MovieEntity): MovieDTO {
+    private fun getGalleryMap(movies: List<MovieEntity>) : Map<String, List<ImageDTO>> {
+        if(movies.isEmpty()) {
+            return mapOf()
+        }
+        return galleryService.getImages(movies.stream().map { movie -> movie.id.toString() }.collect(
+            Collectors.toSet<String>()))
+    }
+
+    private fun mapToDTO(movieEntity: MovieEntity, galleryMap: Map<String, List<ImageDTO>>): MovieDTO {
         val crewList = mutableListOf<CrewDTO>()
         val castList = mutableListOf<CastDTO>()
 
@@ -101,6 +116,15 @@ class MovieService(
                     is CastJobEntity -> castList.add(mapToDTO(job))
                 }
             }
+
+        val images: List<ImageDTO> = galleryMap[movieEntity.id.toString()].orEmpty()
+        val coverImg: ImageDTO?
+        if(images.isEmpty()) {
+            coverImg = null
+        }else {
+            coverImg = images[0]
+        }
+
         return MovieDTO(
             id = movieEntity.id.toString(),
             title = movieEntity.title,
@@ -108,6 +132,8 @@ class MovieService(
             synopsis = movieEntity.synopsis,
             releaseYear = movieEntity.releaseYear,
             releaseDate = movieEntity.releaseDate.format(dateTimeFormatter),
+            coverImageUrl = coverImg,
+            images = images,
             rating = movieEntity.rating.setScale(1, RoundingMode.FLOOR).toPlainString(),
             createdAt = movieEntity.createdAt,
             cast = castList,

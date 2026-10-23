@@ -31,6 +31,8 @@ dependencies {
     implementation("tools.jackson.module:jackson-module-kotlin")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     runtimeOnly("org.postgresql:postgresql")
+    // Source: https://mvnrepository.com/artifact/io.grpc/grpc-services
+    runtimeOnly("io.grpc:grpc-services:1.85.1")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
     testImplementation("org.springframework.boot:spring-boot-starter-flyway-test")
     testImplementation("org.springframework.boot:spring-boot-starter-graphql-test")
