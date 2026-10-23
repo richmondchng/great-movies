@@ -1,4 +1,4 @@
-import type { Movies, LatestMovieItem, MovieListItem, MoviesResponse } from '#lib/types/movie.ts'
+import type { Movies, LatestMovieItem, MovieListItem, MoviesResponse, MovieDetailsItem } from '#lib/types/movie.ts'
 import { graphql } from './graphql';
 
 export async function getMovies(
@@ -54,4 +54,42 @@ export async function getLatestMovies(
         );
     
     return data.movies
+}
+
+export async function getMovie(
+    fetchFn: typeof fetch,
+    id: number
+): Promise<MovieDetailsItem> {
+
+    const data = await graphql<MovieDetailsItem>(
+            fetchFn,
+            `
+                query GetMovies($id: Int!) {
+                    movie(id: $id) {
+                        id
+                        title
+                        releaseYear
+                        releaseDate
+                        rating
+                        cast {
+                            personId
+                            firstName
+                            lastName
+                            sequence
+                            characterName
+                        }
+                        crew {
+                            personId
+                            firstName
+                            lastName
+                            sequence
+                            jobName
+                        }
+                    }
+                }
+            `,
+            { id: id }
+        );
+    
+    return data
 }

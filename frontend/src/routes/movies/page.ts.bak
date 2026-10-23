@@ -1,0 +1,18 @@
+import type { Movies, MovieListItem } from '#lib/types/movie.ts';
+
+export const load = async ({ fetch }) => {
+
+    console.log("page load data client")
+    const response  = await fetch('/api/movies');
+
+    if (!response.ok) {
+        throw new Error(`HTTP error: ${response.status}`);
+    }
+
+    const data : Movies<MovieListItem> = await response.json();
+    return {
+        movies: data.movies,
+        page: data.page,
+        totalPages: data.totalPages
+    };
+};
