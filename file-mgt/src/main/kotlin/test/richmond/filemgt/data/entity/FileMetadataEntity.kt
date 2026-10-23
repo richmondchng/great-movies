@@ -2,39 +2,49 @@ package test.richmond.filemgt.data.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import java.time.Instant
+import java.util.UUID
+import test.richmond.filemgt.model.FileCategory
 
 @Entity
-@Table(name = "file_upload_items")
+@Table(name = "file_metadata")
 class FileMetadataEntity(
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    @GeneratedValue(strategy = GenerationType.UUID)
+    val id: UUID? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "file_upload_id", nullable = false)
-    val fileUpload: FileGroupEntity,
+    @Column(name = "linked_id", nullable = false)
+    val linkedId: UUID,
 
-    @Column(name = "file_name", nullable = false, length = 255)
-    val fileName: String,
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name = "category")
+    val category: FileCategory = FileCategory.COVER_IMAGE,
 
-    @Column(name = "file_path", length = 1000)
-    val filePath: String? = null,
+    @Column(name = "original_file_name", nullable = false, length = 100)
+    val originalFileName: String,
 
-    @Column(name = "content_type", length = 100)
-    val contentType: String? = null,
+    @Column(name = "mime_type", length = 50)
+    val mimeType: String? = null,
 
     @Column(name = "file_size")
     val fileSize: Long? = null,
 
-    @Column(name = "created_at", nullable = false)
-    val createdAt: Instant = Instant.now()
+    @Column(name = "file_path", length = 255)
+    val filePath: String? = null,
+
+    @Column(name = "file_name", nullable = false, length = 100)
+    val fileName: String,
+
+    @Column(name = "created_at", nullable=false)
+    val createdAt: Instant = Instant.now(),
+
+    @Column(name="created_by", length=50)
+    val createdBy: String? = null
 )
