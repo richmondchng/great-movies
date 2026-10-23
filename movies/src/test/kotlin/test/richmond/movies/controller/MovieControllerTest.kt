@@ -16,6 +16,7 @@ import test.richmond.movies.model.dto.CrewDTO
 import test.richmond.movies.model.dto.MovieDTO
 import test.richmond.movies.model.dto.MoviesDTO
 import test.richmond.movies.service.MovieService
+import kotlin.Int
 
 @GraphQlTest(MovieController::class)
 @Import(GraphQLConfig::class)
@@ -32,7 +33,10 @@ class MovieControllerTest @Autowired constructor(
             MoviesDTO(
                 movies = listOf(),
                 page = 0,
-                pageSize = 20
+                pageSize = 20,
+                numberOfElements = 0,
+                totalPages = 0,
+                totalElements = 0
             )
         )
 
@@ -68,7 +72,10 @@ class MovieControllerTest @Autowired constructor(
                         constructMovieDTO(id = 2L, title = "Movie 2")
                     ),
                     page = 1,
-                    pageSize = 10
+                    pageSize = 10,
+                    numberOfElements = 2,
+                    totalPages = 0,
+                    totalElements = 2
                 )
             )
 
@@ -289,7 +296,7 @@ class MovieControllerTest @Autowired constructor(
             synopsis = "Test synopsis",
             rating = rating,
             releaseYear = releaseYear,
-            Instant.now(),
+            releaseDate = "2020-10-02",
             cast = listOf(CastDTO(1L, "Peter", "P", 99, "Test Character", 1L)),
             crew = listOf(CrewDTO(2L, "Norman", "O", 99, "Director", 2L))
         )

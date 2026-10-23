@@ -4,7 +4,7 @@
 type Query {
     persons(page: Int = 0, pageSize: Int = 20): Persons!
     person(id: Int!): Person
-    movies(page: Int = 0, pageSize: Int = 20): Movies!
+    movies(page: Int = 0, pageSize: Int = 20, sortBy: String = "releaseDate", sortAsc: Boolean = true): Movies!
     movie(id: Int!): Movie
 }
 
@@ -28,6 +28,7 @@ type Movie {
     title: String!
     summary: String
     releaseYear: Int!
+    releaseDate: String!
     rating: String!
     cast: [Cast!]!
     crew: [Crew!]!

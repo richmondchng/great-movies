@@ -19,9 +19,9 @@ class MovieController(
     private val logger = LoggerFactory.getLogger(MovieController::class.java)
 
     @QueryMapping(name = "movies")
-    fun movies(@Argument page: Int, @Argument pageSize: Int) : MoviesDTO {
+    fun movies(@Argument page: Int, @Argument pageSize: Int, @Argument sortBy: String, @Argument sortAsc: Boolean) : MoviesDTO {
         logger.info("Get all movies for page $page with page size $pageSize")
-        return movieService.getMovies(page, pageSize)
+        return movieService.getMovies(page, pageSize, sortBy, sortAsc)
     }
 
     @QueryMapping(name = "movie")

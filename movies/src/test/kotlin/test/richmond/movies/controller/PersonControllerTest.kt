@@ -153,7 +153,11 @@ class PersonControllerTest @Autowired constructor(
             PersonsDTO(
                 persons = listOf(),
                 page = 0,
-                pageSize = 20)
+                pageSize = 20,
+                numberOfElements = 0,
+                totalPages = 0,
+                totalElements = 0
+            )
         )
 
         graphQlTester.document("""
@@ -198,7 +202,11 @@ class PersonControllerTest @Autowired constructor(
             PersonsDTO(
                 persons = listOf(person1, person2),
                 page = 1,
-                pageSize = 10)
+                pageSize = 10,
+                numberOfElements = 2,
+                totalPages = 0,
+                totalElements = 2
+            )
         )
 
         graphQlTester.document("""

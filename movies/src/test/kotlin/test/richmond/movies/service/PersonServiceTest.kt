@@ -1,6 +1,7 @@
 package test.richmond.movies.service
 
 import java.time.Instant
+import java.time.LocalDate
 import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
@@ -65,7 +66,8 @@ class PersonServiceTest {
                     title = "Movie A",
                     summary = "",
                     synopsis = "",
-                    releaseYear = 2022
+                    releaseYear = 2022,
+                    releaseDate = LocalDate.of(2022, 10, 1)
                 ),
                 person = person
             )
@@ -79,7 +81,8 @@ class PersonServiceTest {
                     title = "Movie B",
                     summary = "",
                     synopsis = "",
-                    releaseYear = 2021
+                    releaseYear = 2021,
+                    releaseDate = LocalDate.of(2022, 10, 1)
                 ),
                 person = person
             )
@@ -93,7 +96,8 @@ class PersonServiceTest {
                     title = "Movie C",
                     summary = "",
                     synopsis = "",
-                    releaseYear = 2023
+                    releaseYear = 2023,
+                    releaseDate = LocalDate.of(2022, 10, 1)
                 ),
                 person = person
             )

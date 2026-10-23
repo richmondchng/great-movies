@@ -2,6 +2,8 @@
 	import './layout.css';
 	import favicon from '#lib/assets/favicon.svg';
 	import type { LayoutProps } from './$types';
+	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
 
 	let { children }: LayoutProps = $props();
 </script>
@@ -12,15 +14,15 @@
 
 <div class="site-wrapper">
 <nav class="navbar">
-	<a href="/" class="navbar-brand">
+	<a href={resolve('/')} class="navbar-brand">
 		<span class="brand-icon">▶</span>
 		<span>Great<span class="brand-highlight">Movies</span></span>
 	</a>
 
 	<div class="navbar-links">
-		<a href="/" class="nav-link active">Home</a>
-		<a href="/movies" class="nav-link">Movies</a>
-		<a href="/actors" class="nav-link">Actors</a>
+		<a href={resolve('/')} class="nav-link {page.url.pathname == '/' ? 'active' : ''}">Home</a>
+		<a href={resolve('/movies')} class="nav-link {page.url.pathname.startsWith('/movies') ? 'active' : ''}">Movies</a>
+		<a href={resolve('/cast-crew')} class="nav-link {page.url.pathname.startsWith('/cast-crew') ? 'active' : ''}">Cast and Crew</a>
 	</div>
 </nav>
 

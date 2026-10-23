@@ -4,6 +4,7 @@ data class MovieInput(
     val title: String,
     val summary: String,
     val releaseYear: Int,
+    val releaseDate: String,
     val rating: String,
     val cast: List<MovieCastInput> = listOf(),
     val crew: List<MovieCrewInput> = listOf()

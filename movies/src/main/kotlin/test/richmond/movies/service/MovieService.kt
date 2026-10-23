@@ -2,7 +2,11 @@ package test.richmond.movies.service
 
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.time.Instant
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import test.richmond.movies.data.entity.CastJobEntity
 import test.richmond.movies.data.entity.CrewJobEntity
@@ -28,8 +32,38 @@ class MovieService(
     val personRepository: PersonRepository
 ) {
 
-    fun getMovies(page: Int, pageSize: Int): MoviesDTO {
-        val movies = movieRepository.findAll(PageRequest.of(page, pageSize))
+    private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+    enum class SortColumn(
+        val columnName: String
+    ) {
+        ID("id"),
+        TITLE("title"),
+        RATING("rating"),
+        RELEASEDATE("releaseDate"),
+        RELEASEDYEAR("releaseYear"),
+        CREATEDAT("createdAt");
+
+        companion object {
+            fun getColumnName(columnName: String): String {
+                for (column in entries) {
+                    if (column.columnName.equals(columnName, ignoreCase = true)) {
+                        return column.columnName
+                    }
+                }
+                return RELEASEDATE.columnName
+            }
+        }
+    }
+
+    fun getMovies(page: Int, pageSize: Int, sortBy: String, sortAsc: Boolean): MoviesDTO {
+        val sortDirection = if(sortAsc) Sort.Direction.ASC else Sort.Direction.DESC
+        val movies = movieRepository.findAll(PageRequest.of(
+            page,
+            pageSize,
+            sortDirection,
+            SortColumn.getColumnName(sortBy)))
+
         return MoviesDTO(
             movies = movies.stream().map { m -> mapToDTO(m) }.toList(),
             page = page,
@@ -71,6 +105,7 @@ class MovieService(
             summary = movieEntity.summary,
             synopsis = movieEntity.synopsis,
             releaseYear = movieEntity.releaseYear,
+            releaseDate = movieEntity.releaseDate.format(dateTimeFormatter),
             rating = movieEntity.rating.setScale(1, RoundingMode.FLOOR).toPlainString(),
             createdAt = movieEntity.createdAt,
             cast = castList,
@@ -108,7 +143,8 @@ class MovieService(
             summary = movieInput.summary,
             synopsis = movieInput.summary,
             rating = BigDecimal(movieInput.rating),
-            releaseYear = movieInput.releaseYear
+            releaseYear = movieInput.releaseYear,
+            releaseDate = LocalDate.parse(movieInput.releaseDate)
         )
 
         val personIds = buildSet{
@@ -152,4 +188,5 @@ class MovieService(
             sequence = movieCastInput.sequence
         )
     }
+
 }

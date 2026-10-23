@@ -4,6 +4,7 @@ CREATE TABLE movie (
     summary VARCHAR(500),
     synopsis TEXT,
     release_year INT,
+    release_date DATE,
     rating DECIMAL,
     created_at TIMESTAMP
 );
