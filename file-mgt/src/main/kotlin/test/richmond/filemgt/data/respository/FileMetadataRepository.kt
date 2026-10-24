@@ -10,4 +10,6 @@ interface FileMetadataRepository: JpaRepository<FileMetadataEntity, Long> {
 
     @Query("SELECT f FROM FileMetadataEntity f WHERE f.linkedId IN :linkedIds")
     fun findAllByLinkedIdIn(@Param("linkedIds") linkedIds: List<UUID>): List<FileMetadataEntity>
+
+    fun findByFileName(@Param("fileName") fileName: String): FileMetadataEntity?
 }
