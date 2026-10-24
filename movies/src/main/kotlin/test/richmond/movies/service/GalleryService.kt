@@ -1,13 +1,14 @@
 package test.richmond.movies.service
 
 import io.grpc.StatusRuntimeException
-import java.util.stream.Collectors
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import test.richmond.filemgt.grpc.FileServiceGrpc
 import test.richmond.filemgt.grpc.GetImagesRequest
 import test.richmond.filemgt.grpc.Image
 import test.richmond.filemgt.grpc.ImageOwner
+import test.richmond.movies.model.GalleryMap
+import test.richmond.movies.model.ImageType
 import test.richmond.movies.model.dto.ImageDTO
 
 @Service
@@ -17,9 +18,9 @@ class GalleryService(
 
     private val logger = LoggerFactory.getLogger(GalleryService::class.java)
 
-    fun getImages(linkedIds: Set<String>) : Map<String, List<ImageDTO>> {
+    fun getImages(linkedIds: Set<String>) : GalleryMap {
 
-        val allOwners = linkedIds.map { id -> buildImageOwner(id) }.toList();
+        val allOwners = linkedIds.map { id -> buildImageOwner(id) }.toSet()
 
         try{
             logger.info("Getting images for ${allOwners.size} owners")
@@ -28,18 +29,19 @@ class GalleryService(
                     .addAllOwners(allOwners)
                     .build()
             )
-            logger.info("Request end")
-            return response.imagesList.stream()
-                .map { image -> mapToDTO(image) }
-                .collect(Collectors.groupingBy { image: ImageDTO -> image.linkedId})
-        } catch (ex: StatusRuntimeException) {
-            println("gRPC status: ${ex.status}")
-            println("Description: ${ex.status.description}")
-            println("Cause: ${ex.cause}")
-            throw ex
-        } catch(ex : Throwable) {
-            println("gRPC failure: ${ex}")
-            throw ex
+            return GalleryMap(
+                response.imagesList.stream()
+                    .map { image -> mapToDTO(image) }
+                    .toList()
+            )
+        } catch (e: StatusRuntimeException) {
+            logger.error("gRPC status: ${e.status}")
+            logger.error("Description: ${e.status.description}")
+            logger.error("Cause: ${e.cause}")
+            throw e
+        } catch(e : Throwable) {
+            logger.error("gRPC failure: $e")
+            throw e
         }
     }
 
@@ -53,7 +55,16 @@ class GalleryService(
         return ImageDTO(
             id = image.imageId,
             linkedId = image.ownerId,
-            url = image.fileUrl
+            url = image.fileUrl,
+            imageType = getImageType(image.imageType)
         )
+    }
+
+    fun getImageType(imageType: test.richmond.filemgt.grpc.ImageType) : ImageType {
+        return if(imageType == test.richmond.filemgt.grpc.ImageType.COVER){
+            ImageType.COVER
+        } else {
+            ImageType.GALLERY
+        }
     }
 }

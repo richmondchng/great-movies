@@ -20,6 +20,7 @@ import test.richmond.movies.data.entity.MovieEntity
 import test.richmond.movies.data.entity.PersonEntity
 import test.richmond.movies.data.repository.PersonRepository
 import test.richmond.movies.exception.PersonNotFoundException
+import test.richmond.movies.model.GalleryMap
 import test.richmond.movies.model.dto.CastDTO
 import test.richmond.movies.model.dto.CrewDTO
 import test.richmond.movies.model.dto.ImageDTO
@@ -99,15 +100,22 @@ class MovieService(
         return mapToDTO(result, galleryMap)
     }
 
-    private fun getGalleryMap(movies: List<MovieEntity>) : Map<String, List<ImageDTO>> {
+    private fun getGalleryMap(movies: List<MovieEntity>) : GalleryMap {
         if(movies.isEmpty()) {
-            return mapOf()
+            return GalleryMap(listOf())
         }
-        return galleryService.getImages(movies.stream().map { movie -> movie.id.toString() }.collect(
-            Collectors.toSet<String>()))
+
+        val ids = mutableSetOf<String>()
+        movies.forEach { movie ->
+            ids.add(movie.id.toString())
+            movie.crew.forEach { crew ->
+                ids.add(crew.person.id.toString())
+            }
+        }
+        return galleryService.getImages(ids)
     }
 
-    private fun mapToDTO(movieEntity: MovieEntity, galleryMap: Map<String, List<ImageDTO>>): MovieDTO {
+    private fun mapToDTO(movieEntity: MovieEntity, galleryMap: GalleryMap): MovieDTO {
         val crewList = mutableListOf<CrewDTO>()
         val castList = mutableListOf<CastDTO>()
 
@@ -115,18 +123,13 @@ class MovieService(
             .sorted(Comparator.comparing(JobEntity::sequence))
             .forEach { job ->
                 when (job) {
-                    is CrewJobEntity -> crewList.add(mapToDTO(job))
-                    is CastJobEntity -> castList.add(mapToDTO(job))
+                    is CrewJobEntity -> crewList.add(mapToDTO(job, galleryMap))
+                    is CastJobEntity -> castList.add(mapToDTO(job, galleryMap))
                 }
             }
 
-        val images: List<ImageDTO> = galleryMap[movieEntity.id.toString()].orEmpty()
-        val coverImg: ImageDTO?
-        if(images.isEmpty()) {
-            coverImg = null
-        }else {
-            coverImg = images[0]
-        }
+        val images: List<ImageDTO> = galleryMap.getImages(movieEntity.id.toString())
+        val coverImg: ImageDTO? = galleryMap.getCover(movieEntity.id.toString())
 
         return MovieDTO(
             id = movieEntity.id.toString(),
@@ -144,25 +147,29 @@ class MovieService(
         )
     }
 
-    private fun mapToDTO(castEntity: CastJobEntity): CastDTO {
+    private fun mapToDTO(castEntity: CastJobEntity, galleryMap: GalleryMap): CastDTO {
+        val coverImg: ImageDTO? = galleryMap.getCover(castEntity.person.id.toString())
         return CastDTO(
             personId = castEntity.person.id.toString(),
             firstName = castEntity.person.firstName,
             lastName = castEntity.person.lastName,
             sequence = castEntity.sequence,
             characterName = castEntity.characterName,
-            jobId = castEntity.id.toString()
+            jobId = castEntity.id.toString(),
+            coverImageUrl = coverImg
         )
     }
 
-    private fun mapToDTO(crewEntity: CrewJobEntity): CrewDTO {
+    private fun mapToDTO(crewEntity: CrewJobEntity, galleryMap: GalleryMap): CrewDTO {
+        val coverImg: ImageDTO? = galleryMap.getCover(crewEntity.person.id.toString())
         return CrewDTO(
             personId = crewEntity.person.id.toString(),
             firstName = crewEntity.person.firstName,
             lastName = crewEntity.person.lastName,
             sequence = crewEntity.sequence,
             jobName = crewEntity.jobName,
-            jobId = crewEntity.id.toString()
+            jobId = crewEntity.id.toString(),
+            coverImageUrl = coverImg,
         )
     }
 
