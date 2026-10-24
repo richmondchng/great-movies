@@ -19,7 +19,7 @@ export async function getMovies(
                             rating
                             coverImageUrl {
                                 id
-                                imageUrl
+                                url
                             }
                         }
                         page
@@ -52,7 +52,7 @@ export async function getLatestMovies(
                             rating
                             coverImageUrl {
                                 id
-                                imageUrl
+                                url
                             }
                         }
                     }
@@ -66,24 +66,24 @@ export async function getLatestMovies(
 
 export async function getMovie(
     fetchFn: typeof fetch,
-    id: number
+    id: string
 ): Promise<MovieDetailsItem> {
 
     const data = await graphql<MovieDetailResponse>(
             fetchFn,
             `
-                query GetMovies($id: Int!) {
+                query GetMovies($id: String!) {
                     movie(id: $id) {
                         id
                         title
                         summary
                         coverImageUrl {
                             id
-                            imageUrl
+                            url
                         }
                         images {
                             id
-                            imageUrl
+                            url
                         }
                         releaseYear
                         releaseDate
@@ -96,7 +96,7 @@ export async function getMovie(
                             characterName
                             coverImageUrl {
                                 id
-                                imageUrl
+                                url
                             }
                         }
                         crew {
@@ -107,7 +107,7 @@ export async function getMovie(
                             jobName
                             coverImageUrl {
                                 id
-                                imageUrl
+                                url
                             }
                         }
                     }

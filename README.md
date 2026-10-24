@@ -6,3 +6,4 @@ Use of AI
 # JPA entities configuration
 # Frontend CSS
 # Frontend code snippets
+# Help to understand concept with relevant examples

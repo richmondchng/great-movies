@@ -12,7 +12,7 @@ export interface MovieDetailsItem {
 }
 
 export interface ImageItem {
-    id: number;
+    id: string;
     url: string;
 }
 

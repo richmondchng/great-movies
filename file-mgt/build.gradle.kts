@@ -31,15 +31,23 @@ dependencies {
     implementation("tools.jackson.module:jackson-module-kotlin")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     runtimeOnly("org.postgresql:postgresql")
+    // Source: https://mvnrepository.com/artifact/io.grpc/grpc-services
+    runtimeOnly("io.grpc:grpc-services:1.85.1")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
     testImplementation("org.springframework.boot:spring-boot-starter-flyway-test")
     testImplementation("org.springframework.boot:spring-boot-starter-graphql-test")
     testImplementation("org.springframework.boot:spring-boot-starter-grpc-server-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:6.4.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
+protobuf {
+    plugins {
+        create("grpc")
+    }
+}
 kotlin {
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")

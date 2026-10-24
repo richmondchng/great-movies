@@ -37,8 +37,8 @@ type Movie {
 }
 
 type Image {
-    id: Int!
-    imageUrl: String!
+    id: String!
+    url: String!
     imageAlt: String
 }
 

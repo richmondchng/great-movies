@@ -152,8 +152,8 @@ INSERT INTO job (id, movie_id, person_id, sequence, job_type) VALUES
 ('da3bb7e2-738f-43db-a8de-70f9a2ff4eb5', '66d75c91-de01-40f0-865f-7747bda08143', '9cf4eda0-1cb1-42ca-8589-71d5d8f9a7df', 3, 'CAST'),
 ('b480f449-c954-4387-b756-0b1072f590f6', '66d75c91-de01-40f0-865f-7747bda08143', '31d12f57-ac9d-4126-b76f-b3c8fdbb92cc', 3, 'CAST'),
 ('26471365-2799-4337-895c-79ef41cd46ab', '5e869efe-35cf-466d-aaa1-2010c0f7e0b8', 'b11f9c82-efb3-4d30-8949-db2084fefc02', 1, 'CREW'),
-('53d902aa-d37c-4c55-ac6a-8759e24b3041', '5e869efe-35cf-466d-aaa1-2010c0f7e0b8', '6e5eaa37-f21f-4962-b0af-7bfb52c08f1a', 1, 'CAST'),
-('2f251eae-09b2-4691-a350-009518995bce', '5e869efe-35cf-466d-aaa1-2010c0f7e0b8', '31dd986b-118e-414d-a968-630778835708', 1, 'CAST'),
+('a84d9ca6-2eed-448e-be17-0e64353cb027', '5e869efe-35cf-466d-aaa1-2010c0f7e0b8', '6e5eaa37-f21f-4962-b0af-7bfb52c08f1a', 1, 'CAST'),
+('a5332675-482e-4f3c-a906-c33a00133002', '5e869efe-35cf-466d-aaa1-2010c0f7e0b8', '31dd986b-118e-414d-a968-630778835708', 1, 'CAST'),
 ('46cb727a-cf48-49f1-90c8-7993cab94141', '5e869efe-35cf-466d-aaa1-2010c0f7e0b8', '31d12f57-ac9d-4126-b76f-b3c8fdbb92cc', 3, 'CAST')
 ;
 
@@ -176,8 +176,8 @@ INSERT INTO job_cast(job_id, character_name) VALUES
 ('e60c085c-4ae6-4a62-96fe-4ffea2ab8b03', 'Obadiah Stane'),
 ('da3bb7e2-738f-43db-a8de-70f9a2ff4eb5', 'Christine Everhard'),
 ('b480f449-c954-4387-b756-0b1072f590f6', 'Agent Coulson'),
-('53d902aa-d37c-4c55-ac6a-8759e24b3041', 'Thor'),
-('2f251eae-09b2-4691-a350-009518995bce', 'Jane Foster'),
+('a84d9ca6-2eed-448e-be17-0e64353cb027', 'Thor'),
+('a5332675-482e-4f3c-a906-c33a00133002', 'Jane Foster'),
 ('46cb727a-cf48-49f1-90c8-7993cab94141', 'Agent Coulson')
 ;
 
