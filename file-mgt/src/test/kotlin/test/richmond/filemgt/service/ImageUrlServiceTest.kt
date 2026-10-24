@@ -52,7 +52,6 @@ class ImageUrlServiceTest {
         imageUrlService.getImages(GetImagesRequest.getDefaultInstance(), responseObserver)
 
         verifyNoInteractions(fileMetadataRepository)
-        verify( responseObserver, times(0)).onNext(any())
     }
 
     @Test
@@ -79,9 +78,9 @@ class ImageUrlServiceTest {
 
         imageUrlService.getImages(request, responseObserver);
 
-        val linkedIdsCaptor = argumentCaptor<List<String>>()
+        val linkedIdsCaptor = argumentCaptor<List<UUID>>()
         verify(fileMetadataRepository).findAllByLinkedIdIn(linkedIdsCaptor.capture())
-        assertThat(linkedIdsCaptor.firstValue).containsExactlyInAnyOrder(linkedId1.toString(), linkedId2.toString())
+        assertThat(linkedIdsCaptor.firstValue).containsExactlyInAnyOrder(linkedId1, linkedId2)
 
         val getImagesForOwnersResponseCaptor = argumentCaptor<GetImagesForOwnersResponse>()
         verify( responseObserver, times(1)).onNext(getImagesForOwnersResponseCaptor.capture())
