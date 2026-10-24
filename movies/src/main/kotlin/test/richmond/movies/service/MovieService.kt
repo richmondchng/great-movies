@@ -7,9 +7,11 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import java.util.stream.Collectors
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
+import test.richmond.movies.controller.PersonController
 import test.richmond.movies.data.entity.CastJobEntity
 import test.richmond.movies.data.entity.CrewJobEntity
 import test.richmond.movies.data.entity.JobEntity
@@ -36,6 +38,7 @@ class MovieService(
     val galleryService: GalleryService
 ) {
 
+    private val logger = LoggerFactory.getLogger(MovieService::class.java)
     private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     enum class SortColumn(

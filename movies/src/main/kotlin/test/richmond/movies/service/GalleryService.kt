@@ -53,7 +53,7 @@ class GalleryService(
         return ImageDTO(
             id = image.imageId,
             linkedId = image.ownerId,
-            imageUrl = image.fileUrl
+            url = image.fileUrl
         )
     }
 }
