@@ -21,7 +21,6 @@
   let sentinel = $state<HTMLDivElement>();
 
   async function loadNextPage() {
-      console.log(`values ${loading} and ${hasMore}`)
       // Prevent concurrent requests and unnecessary requests.
       if (loading || !hasMore) return;
 
@@ -32,9 +31,6 @@
           const response = await fetch(
               `/api/movies?page=${page}&size=${PAGE_SIZE}`
           );
-          // const response = await fetch(
-          //     `/api/movies`
-          // );
 
           if (!response.ok) {
               throw new Error(`HTTP error: ${response.status}`);
@@ -56,7 +52,7 @@
       } finally {
           loading = false;
       }
-      console.log(`values ${loading} and ${hasMore}`)
+
   }
 
   onMount(() => {

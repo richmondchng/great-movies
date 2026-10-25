@@ -1,5 +1,5 @@
 export interface MovieDetailsItem {
-    id: number;
+    id: string;
     title: string;
     summary: string;
     coverImageUrl: ImageItem | null;
@@ -17,7 +17,7 @@ export interface ImageItem {
 }
 
 export interface CastDetailItem {
-    personId: number;
+    personId: string;
     firstName: string;
     lastName: string | null;
     characterName: string;
@@ -25,7 +25,7 @@ export interface CastDetailItem {
 }
 
 export interface CrewDetailItem {
-    personId: number;
+    personId: string;
     firstName: string;
     lastName: string | null;
     jobName: string;
@@ -33,7 +33,7 @@ export interface CrewDetailItem {
 }
 
 export interface MovieListItem {
-    id: number;
+    id: string;
     title: string;
     summary: string;
     coverImageUrl: ImageItem | null;
@@ -42,7 +42,7 @@ export interface MovieListItem {
 }
 
 export interface LatestMovieItem {
-    id: number;
+    id: string;
     title: string;
     coverImageUrl: ImageItem | null;
     releaseYear: number | null;
