@@ -4,8 +4,12 @@
 - This repository consist of 3 projects; `movies` and `file-mgt` for backend, and `frontend` for frontend
 - Source root will be in each folder; i.e., if opening in IDE, open `great-movies/movies`, `great-movies/file-mgt` and `great-movies/frontend`
 - Backend is done in Kotlin with Spring Boot 4.1 (Java 17)
-  - `movies` service provide GraphQL endpoints for `frontend` application to query data (and to add data)
-  - `file-mgt` service provide gRPC commands for `movies` to run command to get list of files associated with a movie or person
+  - `movies` service 
+	- provide GraphQL endpoints for `frontend` application to query data (and to add data)
+  - `file-mgt` service 
+	- provide gRPC commands for `movies` to run command to get list of files associated with a movie or person
+	- endpoint to serve image to client
+	- endpoint to upload file to server; current implementation is to upload to a local directory, but can be extended to manage file in different file system with minimal impact on service logic
 - Frontend is Svelte 5 with SvelteKit 3
 
 ### Use of AI
