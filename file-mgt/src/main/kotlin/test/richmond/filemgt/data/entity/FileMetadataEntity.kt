@@ -17,7 +17,6 @@ import test.richmond.filemgt.model.FileCategory
 class FileMetadataEntity(
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
 
     @Column(name = "linked_id", nullable = false)
