@@ -25,10 +25,6 @@ class FileUploadService(
 
     private val logger = LoggerFactory.getLogger(FileUploadService::class.java)
 
-    init {
-        logger.info("#### White listed document types {}", whiteListed)
-    }
-
     fun uploadFile(multipartFile : MultipartFile, id: String, imageType: FileCategory): FileUploadDTO{
 
         if (multipartFile.isEmpty) {

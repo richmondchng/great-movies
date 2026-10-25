@@ -13,7 +13,7 @@ The following are the areas assisted by AI
 1. Generating SQL for flyway
 2. JPA entities configuration - extend entities 
 3. Frontend CSS
-4. Frontend code snippets 
+4. Frontend code snippets
 5. Help to understand concept with relevant examples
 
 
@@ -49,6 +49,12 @@ The following are the areas assisted by AI
 ## Demo
 - Starting the backend application will inject some demo data
 - This includes movie details like summary, cast and crew, and some photo gallery
+- Homepage - shows latest 9 movies (ordered by release date descending)
+	- on click to display movie details
+- Movies - shows all movies order, loads 10 movies at once, will continue querying 10 movies when reach end of page
+	- on click will display movie details
+	- click "Add Movie Image" to select an image to upload, select image as "cover" (cover photo for movie) or "gallery" (photo gallery)
+- Cast and Crew -> TODO
 
 ## GraphQL Query
 
