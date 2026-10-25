@@ -13,12 +13,12 @@ import test.richmond.filemgt.grpc.GetImagesRequest
 import test.richmond.filemgt.grpc.Image
 import test.richmond.filemgt.grpc.ImageType
 import test.richmond.filemgt.model.FileCategory
+import test.richmond.filemgt.util.FileUrlUtil
 
 @GrpcService
 class ImageUrlService(
-    @Value("\${app.file.host-name}")
-    val hostname: String,
-    val fileMetadataRepository: FileMetadataRepository
+    val fileMetadataRepository: FileMetadataRepository,
+    val fileUrlUtil: FileUrlUtil
 ) : FileServiceGrpc.FileServiceImplBase()  {
 
     private val logger = LoggerFactory.getLogger(ImageUrlService::class.java)
@@ -60,7 +60,7 @@ class ImageUrlService(
     }
 
     private fun getImageUrl(fileMetadata: FileMetadataEntity) : String {
-        return "$hostname/gallery/${fileMetadata.fileName}"
+        return fileUrlUtil.constructGetImageUrl(fileMetadata)
     }
 
     private fun getImageType(category: FileCategory) : ImageType {

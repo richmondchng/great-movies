@@ -26,6 +26,7 @@ import test.richmond.filemgt.grpc.Image
 import test.richmond.filemgt.grpc.ImageOwner
 import test.richmond.filemgt.grpc.ImageType
 import test.richmond.filemgt.model.FileCategory
+import test.richmond.filemgt.util.FileUrlUtil
 import kotlin.test.Test
 
 @ExtendWith(MockitoExtension::class)
@@ -35,13 +36,16 @@ class ImageUrlServiceTest {
     lateinit var fileMetadataRepository: FileMetadataRepository
 
     @Mock
+    lateinit var fileUrlUtil: FileUrlUtil
+
+    @Mock
     lateinit var responseObserver: StreamObserver<GetImagesForOwnersResponse?>
 
     private lateinit var imageUrlService: ImageUrlService
 
     @BeforeEach
     fun setUp() {
-        imageUrlService = ImageUrlService("http://localhost", fileMetadataRepository)
+        imageUrlService = ImageUrlService(fileMetadataRepository, fileUrlUtil)
     }
 
     @AfterEach
@@ -75,6 +79,11 @@ class ImageUrlServiceTest {
         val fileMetadataEntity3 : FileMetadataEntity = createFileMetadataEntity(UUID.randomUUID(), linkedId2, FileCategory.COVER, "file-c.jpg")
 
         whenever(fileMetadataRepository.findAllByLinkedIdIn(any())).thenReturn(listOf(fileMetadataEntity1, fileMetadataEntity2, fileMetadataEntity3))
+
+        whenever(fileUrlUtil.constructGetImageUrl(any())).thenReturn(
+            "http://localhost/gallery/file-a.jpg",
+            "http://localhost/gallery/file-b.jpg",
+            "http://localhost/gallery/file-c.jpg")
 
         imageUrlService.getImages(request, responseObserver);
 
