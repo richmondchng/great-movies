@@ -7,12 +7,15 @@
 
   let movie: MovieDetailsItem = $derived(data.movie);
 
+  // type MovieImage = MovieDetailsItem['images'][number];
+  type ImageType = 'GALLERY' | 'COVER';
+
   // Local state lets us update images without reloading the page.
   let images = $state<ImageItem[]>([...data.movie.images]);
   let coverImage = $state(data.movie.coverImageUrl);
 
   let selectedFile = $state<File | null>(null);
-  let imageType = $state<'' | 'COVER' | 'GALLERY'>('');
+  let imageType = $state<ImageType>('GALLERY');
   let uploading = $state(false);
   let uploadError = $state('');
 
@@ -24,7 +27,7 @@
   }
 
   async function handleUpload() {
-    if (!selectedFile || !imageType || uploading) return;
+    if (!selectedFile || uploading) return;
 
     uploading = true;
     uploadError = '';
@@ -114,32 +117,32 @@
 
     <div class="gallery-container">
       <h2>Movie Images</h2>
-    </div>
 
-    <div class="image-gallery">
-      {#each images as image (image.id)}
-        <div class="gallery-item">
-          {#if image.url}
-            <img
-              src={image.url}
-              alt={`${movie.title} scene`}
-              loading="lazy"
-            />
-          {:else}
-            <div
-              class="image-placeholder"
-              role="img"
-              aria-label="Movie image unavailable"
-            >
-              <span aria-hidden="true">?</span>
-            </div>
-          {/if}
-        </div>
-      {/each}
+      <div class="image-gallery">
+        {#each images as image (image.id)}
+          <div class="gallery-item">
+            {#if image.url}
+              <img
+                src={image.url}
+                alt={`${movie.title} scene`}
+                loading="lazy"
+              />
+            {:else}
+              <div
+                class="image-placeholder"
+                role="img"
+                aria-label="Movie image unavailable"
+              >
+                <span aria-hidden="true">?</span>
+              </div>
+            {/if}
+          </div>
+        {/each}
 
-      {#if images.length === 0}
-        <p class="empty-message">No additional images available.</p>
-      {/if}
+        {#if images.length === 0}
+          <p class="empty-message">No additional images available.</p>
+        {/if}
+      </div>
     </div>
   </section>
 
@@ -164,14 +167,12 @@
           {selectedFile.name}
         </span>
 
-        <!-- <label for="image-type">Image type</label> -->
         <select
           id="image-type"
           bind:value={imageType}
           disabled={uploading}
           placeholder="Image Type"
         >
-          <option value="" disabled>Image Type</option>
           <option value="GALLERY">Gallery</option>
           <option value="COVER">Cover</option>
         </select>

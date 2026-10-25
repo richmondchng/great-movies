@@ -175,6 +175,7 @@
 
 .selected-files {
 	color: #a1a1aa;
+	overflow-wrap: anywhere;
 	font-size: 0.9rem;
 }
 
@@ -331,11 +332,6 @@
   gap: 12px;
   margin-top: 12px;
   color: #27272a;
-}
-
-.selected-files {
-  overflow-wrap: anywhere;
-  font-size: 0.9rem;
 }
 
 .upload-options select {
