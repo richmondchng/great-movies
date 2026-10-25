@@ -222,20 +222,20 @@
             <img
               class="person-photo"
               src={person.coverImageUrl.url}
-              alt={person.firstName + " " + person.lastName}
+              alt={[person.firstName, person.lastName].filter(Boolean).join(' ')}
               loading="lazy"
             />
           {:else}
             <div
               class="image-placeholder person-photo"
               role="img"
-              aria-label={`Photo unavailable for ${person.firstName + " " + person.lastName}`}
+              aria-label={`Photo unavailable for ${[person.firstName, person.lastName].filter(Boolean).join(' ')}`}
             >
               <span aria-hidden="true">?</span>
             </div>
           {/if}
 
-          <h3>{person.firstName + " " + person.lastName}</h3>
+          <h3>{[person.firstName, person.lastName].filter(Boolean).join(' ')}</h3>
           <p class="person-subtitle">{person.jobName}</p>
         </article>
       {/each}
@@ -260,20 +260,20 @@
             <img
               class="person-photo"
               src={actor.coverImageUrl.url}
-              alt={actor.firstName + " " + actor.lastName}
+              alt={[actor.firstName, actor.lastName].filter(Boolean).join(' ')}
               loading="lazy"
             />
           {:else}
             <div
               class="image-placeholder person-photo"
               role="img"
-              aria-label={`Photo unavailable for ${actor.firstName + " " + actor.lastName}`}
+              aria-label={`Photo unavailable for ${[actor.firstName, actor.lastName].filter(Boolean).join(' ')}`}
             >
               <span aria-hidden="true">?</span>
             </div>
           {/if}
 
-          <h3>{actor.firstName + " " + actor.lastName}</h3>
+          <h3>{[actor.firstName, actor.lastName].filter(Boolean).join(' ')}</h3>
           <p class="person-subtitle">
             {actor.characterName || "Character unknown"}
           </p>

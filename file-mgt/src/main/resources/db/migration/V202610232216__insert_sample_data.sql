@@ -7,5 +7,8 @@ INSERT INTO file_metadata (id, linked_id, category, original_file_name, mime_typ
 ('d01a055a-b9c2-4e43-b1ba-2e49f503fa54', 'c0979317-46f3-4b8e-b174-dcfda7ca5045', 'COVER', 'robert-downey-jr.jpg', 'image/jpg', 200, '2026/10', 'd01a055ab9c24e43b1ba2e49f503fa54.jpg', 'SYSTEM'),
 ('b152a9de-1e11-4f37-9123-95e43510dc55', '961dabff-e70b-4151-9999-560aff9da538', 'COVER', 'jon-faverau.jpg', 'image/jpg', 200, '2026/10', 'b152a9de1e114f37912395e43510dc55.jpg', 'SYSTEM'),
 ('61297f68-49a6-4458-8a65-2997fb50070e', '31d12f57-ac9d-4126-b76f-b3c8fdbb92cc', 'COVER', 'clark-gregg.jpg', 'image/jpg', 200, '2026/10', '61297f6849a644588a652997fb50070e.jpg', 'SYSTEM'),
-('53f0fda0-efaf-4194-b856-c88c378beed9', '5e869efe-35cf-466d-aaa1-2010c0f7e0b8', 'COVER', 'thor-poster.jpg', 'image/jpg', 200, '2026/10', '53f0fda0efaf4194b856c88c378beed9.jpg', 'SYSTEM')
+('53f0fda0-efaf-4194-b856-c88c378beed9', '5e869efe-35cf-466d-aaa1-2010c0f7e0b8', 'COVER', 'thor-poster.jpg', 'image/jpg', 200, '2026/10', '53f0fda0efaf4194b856c88c378beed9.jpg', 'SYSTEM'),
+('21112b9e-c23c-4646-bbc1-e2b1c5b2f8d6', '3e294518-845e-4f3e-9245-62539f5cc6b3', 'COVER', 'tom-holland.jpg', 'image/jpg', 200, '2026/10', '21112b9ec23c4646bbc1e2b1c5b2f8d6.jpg', 'SYSTEM'),
+('f1d4b07f-6f63-4db8-8bc7-d4998c5a2c31', 'f61faa8e-24d8-431f-beb1-b1df7c06279c', 'COVER', 'spiderman-far-from-home-poster.jpg', 'image/jpg', 200, '2026/10', 'f1d4b07f6f634db88bc7d4998c5a2c31.jpg', 'SYSTEM'),
+('ae239da9-e5e6-4f5a-b939-68507adb6985', 'f61faa8e-24d8-431f-beb1-b1df7c06279c', 'GALLERY', 'spiderman-1.jpg', 'image/jpg', 200, '2026/10', 'ae239da9e5e64f5ab93968507adb6985.jpg', 'SYSTEM')
 ;

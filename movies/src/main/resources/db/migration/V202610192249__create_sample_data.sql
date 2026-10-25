@@ -134,7 +134,12 @@ INSERT INTO person(id, first_name, last_name, title, category, created_at) VALUE
 ('31d12f57-ac9d-4126-b76f-b3c8fdbb92cc', 'Clark', 'Gregg', 'Actor', 'CAST', CURRENT_TIMESTAMP),
 ('b11f9c82-efb3-4d30-8949-db2084fefc02', 'Kenneth', 'Branagh', 'Director', 'CREW', CURRENT_TIMESTAMP),
 ('6e5eaa37-f21f-4962-b0af-7bfb52c08f1a', 'Chris', 'Hemsworth', 'Actor', 'CAST', CURRENT_TIMESTAMP),
-('31dd986b-118e-414d-a968-630778835708', 'Natalie', 'Portman', 'Actor', 'CAST', CURRENT_TIMESTAMP)
+('31dd986b-118e-414d-a968-630778835708', 'Natalie', 'Portman', 'Actor', 'CAST', CURRENT_TIMESTAMP),
+('02eb17ac-e8a7-4159-b927-27cb4a40250f', 'Jon', 'Watts', 'Director', 'CREW', CURRENT_TIMESTAMP),
+('3e294518-845e-4f3e-9245-62539f5cc6b3', 'Tom', 'Holland', 'Actor', 'CAST', CURRENT_TIMESTAMP),
+('25d2621a-b02c-4268-824e-f7a2e57a922b', 'Zendeya', null, 'Actor', 'CAST', CURRENT_TIMESTAMP),
+('6f1e0531-44c8-47da-939e-4fbebc1d1b19', 'Jake', 'Gyllenhaal', 'Actor', 'CAST', CURRENT_TIMESTAMP),
+('12db440e-c93f-46de-9af9-f8bb799bf2d0', 'Jacob', 'Batalon', 'Actor', 'CAST', CURRENT_TIMESTAMP)
 ;
 
 INSERT INTO job (id, movie_id, person_id, sequence, job_type) VALUES
@@ -154,7 +159,12 @@ INSERT INTO job (id, movie_id, person_id, sequence, job_type) VALUES
 ('26471365-2799-4337-895c-79ef41cd46ab', '5e869efe-35cf-466d-aaa1-2010c0f7e0b8', 'b11f9c82-efb3-4d30-8949-db2084fefc02', 1, 'CREW'),
 ('a84d9ca6-2eed-448e-be17-0e64353cb027', '5e869efe-35cf-466d-aaa1-2010c0f7e0b8', '6e5eaa37-f21f-4962-b0af-7bfb52c08f1a', 1, 'CAST'),
 ('a5332675-482e-4f3c-a906-c33a00133002', '5e869efe-35cf-466d-aaa1-2010c0f7e0b8', '31dd986b-118e-414d-a968-630778835708', 1, 'CAST'),
-('46cb727a-cf48-49f1-90c8-7993cab94141', '5e869efe-35cf-466d-aaa1-2010c0f7e0b8', '31d12f57-ac9d-4126-b76f-b3c8fdbb92cc', 3, 'CAST')
+('46cb727a-cf48-49f1-90c8-7993cab94141', '5e869efe-35cf-466d-aaa1-2010c0f7e0b8', '31d12f57-ac9d-4126-b76f-b3c8fdbb92cc', 3, 'CAST'),
+('97613017-f077-4cf3-9667-d85c62297a01', 'f61faa8e-24d8-431f-beb1-b1df7c06279c', '02eb17ac-e8a7-4159-b927-27cb4a40250f', 1, 'CREW'),
+('29dd0cbc-942a-4fd1-97d3-abaf99e90779', 'f61faa8e-24d8-431f-beb1-b1df7c06279c', '3e294518-845e-4f3e-9245-62539f5cc6b3', 1, 'CAST'),
+('be1a3a63-b282-4b76-aefe-5851b74f2920', 'f61faa8e-24d8-431f-beb1-b1df7c06279c', '25d2621a-b02c-4268-824e-f7a2e57a922b', 1, 'CAST'),
+('253caae1-f331-4196-a984-f50b5f0304df', 'f61faa8e-24d8-431f-beb1-b1df7c06279c', '6f1e0531-44c8-47da-939e-4fbebc1d1b19', 2, 'CAST'),
+('af145f0a-59ca-40ea-a061-9d93aa2f302c', 'f61faa8e-24d8-431f-beb1-b1df7c06279c', '12db440e-c93f-46de-9af9-f8bb799bf2d0', 2, 'CAST')
 ;
 
 
@@ -166,7 +176,8 @@ INSERT INTO job_crew(job_id, job_name) VALUES
 ('3f1a6247-269d-41c7-84e9-ea89be6525d2', 'Writer'),
 ('c0e9d32c-146e-4478-84b7-e02c640c5c6b', 'Director'),
 ('2d6e2cb3-5fef-45ae-a2bc-12b1cb694071', 'Writer'),
-('26471365-2799-4337-895c-79ef41cd46ab', 'Director')
+('26471365-2799-4337-895c-79ef41cd46ab', 'Director'),
+('97613017-f077-4cf3-9667-d85c62297a01', 'Director')
 ;
 
 INSERT INTO job_cast(job_id, character_name) VALUES
@@ -178,7 +189,11 @@ INSERT INTO job_cast(job_id, character_name) VALUES
 ('b480f449-c954-4387-b756-0b1072f590f6', 'Agent Coulson'),
 ('a84d9ca6-2eed-448e-be17-0e64353cb027', 'Thor'),
 ('a5332675-482e-4f3c-a906-c33a00133002', 'Jane Foster'),
-('46cb727a-cf48-49f1-90c8-7993cab94141', 'Agent Coulson')
+('46cb727a-cf48-49f1-90c8-7993cab94141', 'Agent Coulson'),
+('29dd0cbc-942a-4fd1-97d3-abaf99e90779', 'Peter Parker'),
+('be1a3a63-b282-4b76-aefe-5851b74f2920', 'MJ'),
+('253caae1-f331-4196-a984-f50b5f0304df', 'Quentin Beck'),
+('af145f0a-59ca-40ea-a061-9d93aa2f302c', 'Ned Leeds')
 ;
 
 COMMIT;
