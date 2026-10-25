@@ -324,6 +324,39 @@
 	font-size: 0.95rem;
 }
 
+.upload-options {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+  color: #27272a;
+}
+
+.selected-files {
+  overflow-wrap: anywhere;
+  font-size: 0.9rem;
+}
+
+.upload-options select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: white;
+  color: #27272a;
+}
+
+.upload-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  margin-top: 10px;
+  color: #c62828;
+  font-size: 0.9rem;
+}
+
 /* Responsive layout */
 @media (max-width: 900px) {
 	.media-panel {

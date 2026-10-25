@@ -1,26 +1,77 @@
 <script lang="ts">
   import './movie-details.css';
   import type { PageProps } from './$types';
-  import type { MovieDetailsItem } from '#lib/types/movie.ts';
+  import type { MovieDetailsItem, ImageItem } from '#lib/types/movie.ts';
 
   let { data }: PageProps = $props();
 
-  let movie : MovieDetailsItem = $derived(data.movie);
-  console.log(`Movie details ${JSON.stringify(movie)}`)
+  let movie: MovieDetailsItem = $derived(data.movie);
 
-  let selectedFiles: FileList | null = null;
+  // Local state lets us update images without reloading the page.
+  let images = $state<ImageItem[]>([...data.movie.images]);
+  let coverImage = $state(data.movie.coverImageUrl);
+
+  let selectedFile = $state<File | null>(null);
+  let imageType = $state<'' | 'COVER' | 'GALLERY'>('');
+  let uploading = $state(false);
+  let uploadError = $state('');
 
   function handleFileChange(event: Event) {
     const input = event.currentTarget as HTMLInputElement;
-    selectedFiles = input.files;
+
+    selectedFile = input.files?.[0] ?? null;
+    uploadError = '';
   }
 
-  function handleUpload() {
-    if (!selectedFiles?.length) return;
+  async function handleUpload() {
+    if (!selectedFile || !imageType || uploading) return;
 
-    // TODO: Upload selectedFiles to your file-management backend.
-    // For example, build FormData and POST it to your upload API.
-    console.log("Files selected:", Array.from(selectedFiles));
+    uploading = true;
+    uploadError = '';
+
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      formData.append('imageType', imageType);
+
+      const response = await fetch(
+        `/api/movies/${movie.id}/images`,
+        {
+          method: 'POST',
+          body: formData
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          (await response.text()) || 'Failed to upload image.'
+        );
+      }
+
+      const uploadedImage = (await response.json()) as ImageItem;
+
+      if (imageType === 'COVER') {
+        coverImage = uploadedImage;
+      } else {
+        images = [...images, uploadedImage];
+      }
+
+      // Clear the selection after a successful upload.
+      selectedFile = null;
+
+      const input = document.getElementById(
+        'movie-images'
+      ) as HTMLInputElement | null;
+
+      if (input) input.value = '';
+    } catch (error) {
+      uploadError =
+        error instanceof Error
+          ? error.message
+          : 'An unexpected error occurred.';
+    } finally {
+      uploading = false;
+    }
   }
 </script>
 
@@ -44,10 +95,10 @@
   <!-- Poster and movie images -->
   <section class="media-panel" aria-label="Movie images">
     <div class="poster-container">
-      {#if movie.coverImageUrl}
+      {#if coverImage}
         <img
           class="poster-image"
-          src={movie.coverImageUrl.url}
+          src={coverImage.url}
           alt={`Poster for ${movie.title}`}
         />
       {:else}
@@ -63,39 +114,39 @@
 
     <div class="gallery-container">
       <h2>Movie Images</h2>
+    </div>
 
-      <div class="image-gallery">
-        {#each movie.images as image (image.id)}
-          <div class="gallery-item">
-            {#if image.url}
-              <img
-                src={image.url}
-                alt={`${movie.title} scene`}
-                loading="lazy"
-              />
-            {:else}
-              <div
-                class="image-placeholder"
-                role="img"
-                aria-label="Movie image unavailable"
-              >
-                <span aria-hidden="true">?</span>
-              </div>
-            {/if}
-          </div>
-        {/each}
+    <div class="image-gallery">
+      {#each images as image (image.id)}
+        <div class="gallery-item">
+          {#if image.url}
+            <img
+              src={image.url}
+              alt={`${movie.title} scene`}
+              loading="lazy"
+            />
+          {:else}
+            <div
+              class="image-placeholder"
+              role="img"
+              aria-label="Movie image unavailable"
+            >
+              <span aria-hidden="true">?</span>
+            </div>
+          {/if}
+        </div>
+      {/each}
 
-        {#if movie.images.length === 0}
-          <p class="empty-message">No additional images available.</p>
-        {/if}
-      </div>
+      {#if images.length === 0}
+        <p class="empty-message">No additional images available.</p>
+      {/if}
     </div>
   </section>
 
-   <!-- Upload additional images -->
+  <!-- Upload additional images -->
   <div class="upload-section">
     <label for="movie-images" class="upload-button">
-      + Add Movie Images
+      + Add Movie Image
     </label>
 
     <input
@@ -103,22 +154,46 @@
       class="file-input"
       type="file"
       accept="image/*"
-      multiple
-     // onchange={handleFileChange}
+      onchange={handleFileChange}
+      disabled={uploading}
     />
 
-    {#if selectedFiles?.length}
-      <span class="selected-files">
-        {selectedFiles.length} file(s) selected
-      </span>
+    {#if selectedFile}
+      <div class="upload-options">
+        <span class="selected-files">
+          {selectedFile.name}
+        </span>
 
-      <button class="upload-button">
-        Upload
-      </button>
+        <!-- <label for="image-type">Image type</label> -->
+        <select
+          id="image-type"
+          bind:value={imageType}
+          disabled={uploading}
+          placeholder="Image Type"
+        >
+          <option value="" disabled>Image Type</option>
+          <option value="GALLERY">Gallery</option>
+          <option value="COVER">Cover</option>
+        </select>
+
+        <button
+          class="upload-button"
+          onclick={handleUpload}
+          disabled={uploading}
+        >
+          {uploading ? 'Uploading...' : 'Upload'}
+        </button>
+      </div>
+    {/if}
+
+    {#if uploadError}
+      <p class="error-message" role="alert">
+        {uploadError}
+      </p>
     {/if}
   </div>
 
-    <!-- Summary and rating -->
+  <!-- Summary and rating -->
   <section class="summary-section">
     <div class="summary-content">
       <h2>Overview</h2>
